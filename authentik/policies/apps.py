@@ -36,6 +36,7 @@ HIST_POLICIES_EXECUTION_TIME = Histogram(
 class BufferedPolicyAccessViewFlag(Flag[bool], key="policies_buffered_access_view"):
 
     default = False
+    visibility = "public"
 
 class AuthentikPoliciesConfig(ManagedAppConfig):
     """authentik policies app config"""
