@@ -1,15 +1,13 @@
-import "#elements/forms/HorizontalFormElement";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { BaseStageForm } from "#admin/stages/BaseStageForm";
-
-import { StagesApi, UserDeleteStage } from "@goauthentik/api";
+import { BaseStageForm } from "@goauthentik/admin/stages/BaseStageForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/elements/forms/HorizontalFormElement";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+
+import { StagesApi, UserDeleteStage } from "@goauthentik/api";
 
 @customElement("ak-stage-user-delete-form")
 export class UserDeleteStageForm extends BaseStageForm<UserDeleteStage> {
@@ -37,7 +35,7 @@ export class UserDeleteStageForm extends BaseStageForm<UserDeleteStage> {
                     "Delete the currently pending user. CAUTION, this stage does not ask for confirmation. Use a consent stage to ensure the user is aware of their actions.",
                 )}
             </span>
-            <ak-form-element-horizontal label=${msg("Name")} required name="name">
+            <ak-form-element-horizontal label=${msg("Name")} ?required=${true} name="name">
                 <input
                     type="text"
                     value="${ifDefined(this.instance?.name || "")}"

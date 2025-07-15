@@ -1,6 +1,6 @@
-import { Device, EventActions, IntentEnum, SeverityEnum, UserTypeEnum } from "@goauthentik/api";
-
 import { msg } from "@lit/localize";
+
+import { Device, EventActions, IntentEnum, SeverityEnum, UserTypeEnum } from "@goauthentik/api";
 
 /* Various tables in the API for which we need to supply labels */
 

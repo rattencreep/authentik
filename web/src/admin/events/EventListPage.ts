@@ -1,33 +1,25 @@
-import "#admin/events/EventMap";
-import "#admin/events/EventVolumeChart";
-import "#components/ak-event-info";
-import "#elements/Tabs";
+import "@goauthentik/admin/events/EventVolumeChart";
+import { EventGeo, EventUser } from "@goauthentik/admin/events/utils";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { EventWithContext } from "@goauthentik/common/events";
+import { actionToLabel } from "@goauthentik/common/labels";
+import { formatElapsedTime } from "@goauthentik/common/temporal";
+import "@goauthentik/components/ak-event-info";
+import { PaginatedResponse } from "@goauthentik/elements/table/Table";
+import { TableColumn } from "@goauthentik/elements/table/Table";
+import { TablePage } from "@goauthentik/elements/table/TablePage";
+import { SlottedTemplateResult } from "@goauthentik/elements/types";
 import "@patternfly/elements/pf-tooltip/pf-tooltip.js";
 
-import { DEFAULT_CONFIG } from "#common/api/config";
-import { EventWithContext } from "#common/events";
-import { actionToLabel } from "#common/labels";
-import { formatElapsedTime } from "#common/temporal";
-
-import { WithLicenseSummary } from "#elements/mixins/license";
-import { PaginatedResponse, TableColumn } from "#elements/table/Table";
-import { TablePage } from "#elements/table/TablePage";
-import { SlottedTemplateResult } from "#elements/types";
-
-import { EventGeo, renderEventUser } from "#admin/events/utils";
-
-import { Event, EventsApi, LicenseSummaryStatusEnum } from "@goauthentik/api";
-
 import { msg } from "@lit/localize";
-import { css, CSSResult, html, TemplateResult } from "lit";
+import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFGrid from "@patternfly/patternfly/layouts/Grid/grid.css";
+import { Event, EventsApi } from "@goauthentik/api";
 
 @customElement("ak-event-list")
-export class EventListPage extends WithLicenseSummary(TablePage<Event>) {
+export class EventListPage extends TablePage<Event> {
     expandable = true;
-    supportsQL = true;
 
     pageTitle(): string {
         return msg("Event Log");
@@ -45,15 +37,13 @@ export class EventListPage extends WithLicenseSummary(TablePage<Event>) {
     @property()
     order = "-created";
 
-    static styles: CSSResult[] = [
-        ...TablePage.styles,
-        PFGrid,
-        css`
+    static get styles(): CSSResult[] {
+        return super.styles.concat(css`
             .pf-m-no-padding-bottom {
                 padding-bottom: 0;
             }
-        `,
-    ];
+        `);
+    }
 
     async apiEndpoint(): Promise<PaginatedResponse<Event>> {
         return new EventsApi(DEFAULT_CONFIG).eventsEventsList(await this.defaultEndpointConfig());
@@ -71,44 +61,23 @@ export class EventListPage extends WithLicenseSummary(TablePage<Event>) {
     }
 
     renderSectionBefore(): TemplateResult {
-        if (this.licenseSummary?.status !== LicenseSummaryStatusEnum.Unlicensed) {
-            return html`<div
-                class="pf-l-grid pf-m-gutter pf-c-page__main-section pf-m-no-padding-bottom"
-            >
+        return html`
+            <div class="pf-c-page__main-section pf-m-no-padding-bottom">
                 <ak-events-volume-chart
-                    class="pf-l-grid__item pf-m-12-col pf-m-4-col-on-xl pf-m-4-col-on-2xl "
                     .query=${{
                         page: this.page,
                         search: this.search,
                     }}
-                    with-map
                 ></ak-events-volume-chart>
-                <ak-events-map
-                    class="pf-l-grid__item pf-m-12-col pf-m-8-col-on-xl pf-m-8-col-on-2xl "
-                    .events=${this.data}
-                    @select-event=${(ev: CustomEvent<{ eventId: string }>) => {
-                        this.search = `event_uuid = "${ev.detail.eventId}"`;
-                        this.page = 1;
-                        this.fetch();
-                    }}
-                ></ak-events-map>
-            </div>`;
-        }
-        return html`<div class="pf-c-page__main-section pf-m-no-padding-bottom">
-            <ak-events-volume-chart
-                .query=${{
-                    page: this.page,
-                    search: this.search,
-                }}
-            ></ak-events-volume-chart>
-        </div>`;
+            </div>
+        `;
     }
 
     row(item: EventWithContext): SlottedTemplateResult[] {
         return [
             html`<div>${actionToLabel(item.action)}</div>
                 <small>${item.app}</small>`,
-            renderEventUser(item),
+            EventUser(item),
             html`<div>${formatElapsedTime(item.created)}</div>
                 <small>${item.created.toLocaleString()}</small>`,
             html`<div>${item.clientIp || msg("-")}</div>

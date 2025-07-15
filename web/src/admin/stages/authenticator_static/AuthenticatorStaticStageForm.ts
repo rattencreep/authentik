@@ -1,10 +1,12 @@
-import "#elements/forms/HorizontalFormElement";
-import "#elements/forms/SearchSelect/index";
+import { RenderFlowOption } from "@goauthentik/admin/flows/utils";
+import { BaseStageForm } from "@goauthentik/admin/stages/BaseStageForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import "@goauthentik/elements/forms/SearchSelect";
 
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { RenderFlowOption } from "#admin/flows/utils";
-import { BaseStageForm } from "#admin/stages/BaseStageForm";
+import { msg } from "@lit/localize";
+import { TemplateResult, html } from "lit";
+import { customElement } from "lit/decorators.js";
 
 import {
     AuthenticatorStaticStage,
@@ -14,10 +16,6 @@ import {
     FlowsInstancesListRequest,
     StagesApi,
 } from "@goauthentik/api";
-
-import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
-import { customElement } from "lit/decorators.js";
 
 @customElement("ak-stage-authenticator-static-form")
 export class AuthenticatorStaticStageForm extends BaseStageForm<AuthenticatorStaticStage> {
@@ -45,7 +43,7 @@ export class AuthenticatorStaticStageForm extends BaseStageForm<AuthenticatorSta
                     "Stage used to configure a static authenticator (i.e. static tokens). This stage should be used for configuration flows.",
                 )}
             </span>
-            <ak-form-element-horizontal label=${msg("Name")} required name="name">
+            <ak-form-element-horizontal label=${msg("Name")} ?required=${true} name="name">
                 <input
                     type="text"
                     value="${this.instance?.name ?? ""}"
@@ -69,12 +67,12 @@ export class AuthenticatorStaticStageForm extends BaseStageForm<AuthenticatorSta
                     )}
                 </p>
             </ak-form-element-horizontal>
-            <ak-form-group expanded>
+            <ak-form-group .expanded=${true}>
                 <span slot="header"> ${msg("Stage-specific settings")} </span>
                 <div slot="body" class="pf-c-form">
                     <ak-form-element-horizontal
                         label=${msg("Token count")}
-                        required
+                        ?required=${true}
                         name="tokenCount"
                     >
                         <input
@@ -91,7 +89,7 @@ export class AuthenticatorStaticStageForm extends BaseStageForm<AuthenticatorSta
                     </ak-form-element-horizontal>
                     <ak-form-element-horizontal
                         label=${msg("Token length")}
-                        required
+                        ?required=${true}
                         name="tokenLength"
                     >
                         <input
@@ -137,7 +135,7 @@ export class AuthenticatorStaticStageForm extends BaseStageForm<AuthenticatorSta
                             .selected=${(flow: Flow): boolean => {
                                 return this.instance?.configureFlow === flow.pk;
                             }}
-                            blankable
+                            ?blankable=${true}
                         >
                         </ak-search-select>
                         <p class="pf-c-form__helper-text">

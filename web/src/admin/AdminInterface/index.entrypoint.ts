@@ -1,37 +1,28 @@
 import "#admin/AdminInterface/AboutModal";
-import "#elements/ak-locale-context/ak-locale-context";
-import "#elements/banner/EnterpriseStatusBanner";
-import "#elements/banner/VersionBanner";
-import "#elements/messages/MessageContainer";
-import "#elements/notifications/APIDrawer";
-import "#elements/notifications/NotificationDrawer";
-import "#elements/router/RouterOutlet";
-import "#elements/sidebar/Sidebar";
-import "#elements/sidebar/SidebarItem";
-
-import {
-    AdminSidebarEnterpriseEntries,
-    AdminSidebarEntries,
-    renderSidebarItems,
-} from "./AdminSidebar.js";
-
+import type { AboutModal } from "#admin/AdminInterface/AboutModal";
+import { ROUTES } from "#admin/Routes";
 import { EVENT_API_DRAWER_TOGGLE, EVENT_NOTIFICATION_DRAWER_TOGGLE } from "#common/constants";
 import { configureSentry } from "#common/sentry/index";
 import { me } from "#common/users";
 import { WebsocketClient } from "#common/ws";
-
-import { AuthenticatedInterface } from "#elements/AuthenticatedInterface";
-import { WithCapabilitiesConfig } from "#elements/mixins/capabilities";
-import { getURLParam, updateURLParams } from "#elements/router/RouteMatch";
-
 import { SidebarToggleEventDetail } from "#components/ak-page-header";
+import { AuthenticatedInterface } from "#elements/AuthenticatedInterface";
+import "#elements/ak-locale-context/ak-locale-context";
+import "#elements/banner/EnterpriseStatusBanner";
+import "#elements/banner/EnterpriseStatusBanner";
+import "#elements/banner/VersionBanner";
+import "#elements/banner/VersionBanner";
+import "#elements/messages/MessageContainer";
+import "#elements/messages/MessageContainer";
+import { WithCapabilitiesConfig } from "#elements/mixins/capabilities";
+import "#elements/notifications/APIDrawer";
+import "#elements/notifications/NotificationDrawer";
+import { getURLParam, updateURLParams } from "#elements/router/RouteMatch";
+import "#elements/router/RouterOutlet";
+import "#elements/sidebar/Sidebar";
+import "#elements/sidebar/SidebarItem";
 
-import type { AboutModal } from "#admin/AdminInterface/AboutModal";
-import { ROUTES } from "#admin/Routes";
-
-import { CapabilitiesEnum, SessionUser, UiThemeEnum } from "@goauthentik/api";
-
-import { css, CSSResult, html, nothing, TemplateResult } from "lit";
+import { CSSResult, TemplateResult, css, html, nothing } from "lit";
 import { customElement, eventOptions, property, query } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 
@@ -40,6 +31,14 @@ import PFDrawer from "@patternfly/patternfly/components/Drawer/drawer.css";
 import PFNav from "@patternfly/patternfly/components/Nav/nav.css";
 import PFPage from "@patternfly/patternfly/components/Page/page.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
+
+import { CapabilitiesEnum, SessionUser, UiThemeEnum } from "@goauthentik/api";
+
+import {
+    AdminSidebarEnterpriseEntries,
+    AdminSidebarEntries,
+    renderSidebarItems,
+} from "./AdminSidebar.js";
 
 if (process.env.NODE_ENV === "development") {
     await import("@goauthentik/esbuild-plugin-live-reload/client");
@@ -57,14 +56,18 @@ export class AdminInterface extends WithCapabilitiesConfig(AuthenticatedInterfac
 
     protected readonly ws: WebsocketClient;
 
-    @property({ type: Object, attribute: false })
+    @property({
+        type: Object,
+        attribute: false,
+        reflect: false,
+    })
     public user?: SessionUser;
 
     @query("ak-about-modal")
     public aboutModal?: AboutModal;
 
     @property({ type: Boolean, reflect: true })
-    public sidebarOpen = false;
+    public sidebarOpen: boolean;
 
     @eventOptions({ passive: true })
     protected sidebarListener(event: CustomEvent<SidebarToggleEventDetail>) {

@@ -1,6 +1,5 @@
 import { globalAK } from "#common/global";
 import { applyDocumentTheme } from "#common/theme";
-
 import { AKElement } from "#elements/Base";
 import { BrandingContextController } from "#elements/controllers/BrandContextController";
 import { ConfigContextController } from "#elements/controllers/ConfigContextController";

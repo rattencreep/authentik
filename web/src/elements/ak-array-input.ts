@@ -1,12 +1,11 @@
-import { AkControlElement } from "#elements/AkControlElement";
-import { bound } from "#elements/decorators/bound";
-import { type Spread } from "#elements/types";
-import { randomId } from "#elements/utils/randomId";
-
+import { AkControlElement } from "@goauthentik/elements/AkControlElement";
+import { bound } from "@goauthentik/elements/decorators/bound";
+import { type Spread } from "@goauthentik/elements/types";
+import { randomId } from "@goauthentik/elements/utils/randomId.js";
 import { spread } from "@open-wc/lit-helpers";
 
 import { msg } from "@lit/localize";
-import { css, html, nothing, TemplateResult } from "lit";
+import { TemplateResult, css, html, nothing } from "lit";
 import { customElement, property, queryAll } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 
@@ -29,30 +28,32 @@ type Keyed<T> = { key: string; item: T };
 
 @customElement("ak-array-input")
 export class ArrayInput<T> extends AkControlElement<T[]> implements IArrayInput<T> {
-    static styles = [
-        PFBase,
-        PFButton,
-        PFInputGroup,
-        PFFormControl,
-        css`
-            select.pf-c-form-control {
-                width: 100px;
-            }
-            .pf-c-input-group {
-                padding-bottom: 0;
-            }
-            .ak-plus-button {
-                display: flex;
-                justify-content: flex-end;
-                flex-direction: row;
-            }
-            .ak-input-group {
-                display: flex;
-                flex-direction: row;
-                flex-wrap: nowrap;
-            }
-        `,
-    ];
+    static get styles() {
+        return [
+            PFBase,
+            PFButton,
+            PFInputGroup,
+            PFFormControl,
+            css`
+                select.pf-c-form-control {
+                    width: 100px;
+                }
+                .pf-c-input-group {
+                    padding-bottom: 0;
+                }
+                .ak-plus-button {
+                    display: flex;
+                    justify-content: flex-end;
+                    flex-direction: row;
+                }
+                .ak-input-group {
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: nowrap;
+                }
+            `,
+        ];
+    }
 
     @property({ type: Boolean })
     validate = false;

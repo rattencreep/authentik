@@ -1,23 +1,20 @@
-import "#components/ak-radio-input";
-import "#elements/CodeMirror";
-import "#elements/ak-dual-select/ak-dual-select-dynamic-selected-provider";
-import "#elements/forms/FormGroup";
-import "#elements/forms/HorizontalFormElement";
-
-import { propertyMappingsProvider, propertyMappingsSelector } from "./RACProviderFormHelpers.js";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { ModelForm } from "#elements/forms/ModelForm";
-
-import { AuthModeEnum, Endpoint, ProtocolEnum, RacApi } from "@goauthentik/api";
-
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/components/ak-radio-input";
+import "@goauthentik/elements/CodeMirror";
+import "@goauthentik/elements/ak-dual-select/ak-dual-select-dynamic-selected-provider.js";
+import "@goauthentik/elements/forms/FormGroup";
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import { ModelForm } from "@goauthentik/elements/forms/ModelForm";
 import YAML from "yaml";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+
+import { AuthModeEnum, Endpoint, ProtocolEnum, RacApi } from "@goauthentik/api";
+
+import { propertyMappingsProvider, propertyMappingsSelector } from "./RACProviderFormHelpers.js";
 
 @customElement("ak-rac-endpoint-form")
 export class EndpointForm extends ModelForm<Endpoint, string> {
@@ -56,7 +53,7 @@ export class EndpointForm extends ModelForm<Endpoint, string> {
 
     renderForm(): TemplateResult {
         return html`
-            <ak-form-element-horizontal label=${msg("Name")} name="name" required>
+            <ak-form-element-horizontal label=${msg("Name")} name="name" ?required=${true}>
                 <input
                     type="text"
                     value="${ifDefined(this.instance?.name)}"
@@ -64,7 +61,7 @@ export class EndpointForm extends ModelForm<Endpoint, string> {
                     required
                 />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label=${msg("Protocol")} required name="protocol">
+            <ak-form-element-horizontal label=${msg("Protocol")} ?required=${true} name="protocol">
                 <ak-radio
                     .options=${[
                         {
@@ -84,7 +81,7 @@ export class EndpointForm extends ModelForm<Endpoint, string> {
                 >
                 </ak-radio>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label=${msg("Host")} name="host" required>
+            <ak-form-element-horizontal label=${msg("Host")} name="host" ?required=${true}>
                 <input
                     type="text"
                     value="${ifDefined(this.instance?.host)}"
@@ -96,7 +93,7 @@ export class EndpointForm extends ModelForm<Endpoint, string> {
             <ak-form-element-horizontal
                 label=${msg("Maximum concurrent connections")}
                 name="maximumConnections"
-                required
+                ?required=${true}
             >
                 <input
                     type="number"

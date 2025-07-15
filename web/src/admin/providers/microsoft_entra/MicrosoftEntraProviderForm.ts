@@ -1,18 +1,20 @@
-import "#components/ak-hidden-text-input";
-import "#elements/ak-dual-select/ak-dual-select-dynamic-selected-provider";
-import "#elements/ak-dual-select/ak-dual-select-provider";
-import "#elements/forms/FormGroup";
-import "#elements/forms/HorizontalFormElement";
-import "#elements/forms/Radio";
-import "#elements/forms/SearchSelect/index";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { BaseProviderForm } from "#admin/providers/BaseProviderForm";
+import { BaseProviderForm } from "@goauthentik/admin/providers/BaseProviderForm";
 import {
     propertyMappingsProvider,
     propertyMappingsSelector,
-} from "#admin/providers/microsoft_entra/MicrosoftEntraProviderFormHelpers";
+} from "@goauthentik/admin/providers/microsoft_entra/MicrosoftEntraProviderFormHelpers.js";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/elements/ak-dual-select/ak-dual-select-dynamic-selected-provider.js";
+import "@goauthentik/elements/ak-dual-select/ak-dual-select-provider.js";
+import "@goauthentik/elements/forms/FormGroup";
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import "@goauthentik/elements/forms/Radio";
+import "@goauthentik/elements/forms/SearchSelect";
+
+import { msg } from "@lit/localize";
+import { TemplateResult, html } from "lit";
+import { customElement } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 import {
     CoreApi,
@@ -22,11 +24,6 @@ import {
     OutgoingSyncDeleteAction,
     ProvidersApi,
 } from "@goauthentik/api";
-
-import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
-import { customElement } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
 
 @customElement("ak-provider-microsoft-entra-form")
 export class MicrosoftEntraProviderFormPage extends BaseProviderForm<MicrosoftEntraProvider> {
@@ -49,7 +46,7 @@ export class MicrosoftEntraProviderFormPage extends BaseProviderForm<MicrosoftEn
     }
 
     renderForm(): TemplateResult {
-        return html` <ak-form-element-horizontal label=${msg("Name")} required name="name">
+        return html` <ak-form-element-horizontal label=${msg("Name")} ?required=${true} name="name">
                 <input
                     type="text"
                     value="${ifDefined(this.instance?.name)}"
@@ -57,10 +54,14 @@ export class MicrosoftEntraProviderFormPage extends BaseProviderForm<MicrosoftEn
                     required
                 />
             </ak-form-element-horizontal>
-            <ak-form-group expanded>
+            <ak-form-group .expanded=${true}>
                 <span slot="header"> ${msg("Protocol settings")} </span>
                 <div slot="body" class="pf-c-form">
-                    <ak-form-element-horizontal label=${msg("Client ID")} required name="clientId">
+                    <ak-form-element-horizontal
+                        label=${msg("Client ID")}
+                        ?required=${true}
+                        name="clientId"
+                    >
                         <input
                             type="text"
                             value="${this.instance?.clientId ?? ""}"
@@ -71,17 +72,26 @@ export class MicrosoftEntraProviderFormPage extends BaseProviderForm<MicrosoftEn
                             ${msg("Client ID for the app registration.")}
                         </p>
                     </ak-form-element-horizontal>
-                    <ak-hidden-text-input
-                        name="clientSecret"
+                    <ak-form-element-horizontal
                         label=${msg("Client Secret")}
-                        autocomplete="off"
-                        value="${this.instance?.clientSecret ?? ""}"
-                        input-hint="code"
-                        required
-                        .help=${msg("Client secret for the app registration.")}
+                        ?required=${true}
+                        name="clientSecret"
                     >
-                    </ak-hidden-text-input>
-                    <ak-form-element-horizontal label=${msg("Tenant ID")} required name="tenantId">
+                        <input
+                            type="text"
+                            value="${this.instance?.clientSecret ?? ""}"
+                            class="pf-c-form-control pf-m-monospace"
+                            required
+                        />
+                        <p class="pf-c-form__helper-text">
+                            ${msg("Client secret for the app registration.")}
+                        </p>
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal
+                        label=${msg("Tenant ID")}
+                        ?required=${true}
+                        name="tenantId"
+                    >
                         <input
                             type="text"
                             value="${this.instance?.tenantId ?? ""}"
@@ -160,7 +170,7 @@ export class MicrosoftEntraProviderFormPage extends BaseProviderForm<MicrosoftEn
                     </ak-form-element-horizontal>
                 </div>
             </ak-form-group>
-            <ak-form-group expanded>
+            <ak-form-group ?expanded=${true}>
                 <span slot="header">${msg("User filtering")}</span>
                 <div slot="body" class="pf-c-form">
                     <ak-form-element-horizontal name="excludeUsersServiceAccount">
@@ -204,7 +214,7 @@ export class MicrosoftEntraProviderFormPage extends BaseProviderForm<MicrosoftEn
                             .selected=${(group: Group): boolean => {
                                 return group.pk === this.instance?.filterGroup;
                             }}
-                            blankable
+                            ?blankable=${true}
                         >
                         </ak-search-select>
                         <p class="pf-c-form__helper-text">
@@ -213,7 +223,7 @@ export class MicrosoftEntraProviderFormPage extends BaseProviderForm<MicrosoftEn
                     </ak-form-element-horizontal>
                 </div>
             </ak-form-group>
-            <ak-form-group expanded>
+            <ak-form-group ?expanded=${true}>
                 <span slot="header"> ${msg("Attribute mapping")} </span>
                 <div slot="body" class="pf-c-form">
                     <ak-form-element-horizontal

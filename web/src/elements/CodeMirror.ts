@@ -1,9 +1,3 @@
-import { EVENT_THEME_CHANGE } from "#common/constants";
-
-import { AKElement } from "#elements/Base";
-
-import { UiThemeEnum } from "@goauthentik/api";
-
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import { css as cssLang } from "@codemirror/lang-css";
 import { html as htmlLang } from "@codemirror/lang-html";
@@ -11,19 +5,24 @@ import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
 import { xml } from "@codemirror/lang-xml";
 import {
-    defaultHighlightStyle,
     LanguageSupport,
     StreamLanguage,
+    defaultHighlightStyle,
     syntaxHighlighting,
 } from "@codemirror/language";
 import * as yamlMode from "@codemirror/legacy-modes/mode/yaml";
 import { Compartment, EditorState, Extension } from "@codemirror/state";
 import { oneDark, oneDarkHighlightStyle } from "@codemirror/theme-one-dark";
-import { drawSelection, EditorView, keymap, lineNumbers, ViewUpdate } from "@codemirror/view";
+import { ViewUpdate } from "@codemirror/view";
+import { EditorView, drawSelection, keymap, lineNumbers } from "@codemirror/view";
+import { EVENT_THEME_CHANGE } from "@goauthentik/common/constants";
+import { AKElement } from "@goauthentik/elements/Base";
 import YAML from "yaml";
 
-import { css, CSSResult } from "lit";
+import { CSSResult, css } from "lit";
 import { customElement, property } from "lit/decorators.js";
+
+import { UiThemeEnum } from "@goauthentik/api";
 
 export enum CodeMirrorMode {
     XML = "xml",
@@ -67,21 +66,23 @@ export class CodeMirrorTextarea<T> extends AKElement {
     syntaxHighlightingLight = syntaxHighlighting(defaultHighlightStyle);
     syntaxHighlightingDark = syntaxHighlighting(oneDarkHighlightStyle);
 
-    static styles: CSSResult[] = [
-        // Better alignment with patternfly components
-        css`
-            .cm-editor {
-                padding-top: calc(
-                    var(--pf-global--spacer--form-element) - var(--pf-global--BorderWidth--sm)
-                );
-                padding-bottom: calc(
-                    var(--pf-global--spacer--form-element) - var(--pf-global--BorderWidth--sm)
-                );
-                padding-right: var(--pf-c-form-control--inset--base);
-                padding-left: var(--pf-c-form-control--inset--base);
-            }
-        `,
-    ];
+    static get styles(): CSSResult[] {
+        return [
+            // Better alignment with patternfly components
+            css`
+                .cm-editor {
+                    padding-top: calc(
+                        var(--pf-global--spacer--form-element) - var(--pf-global--BorderWidth--sm)
+                    );
+                    padding-bottom: calc(
+                        var(--pf-global--spacer--form-element) - var(--pf-global--BorderWidth--sm)
+                    );
+                    padding-right: var(--pf-c-form-control--inset--base);
+                    padding-left: var(--pf-c-form-control--inset--base);
+                }
+            `,
+        ];
+    }
 
     @property()
     set value(v: T | string) {

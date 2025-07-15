@@ -1,10 +1,9 @@
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { DualSelectPair } from "#elements/ak-dual-select/types";
-
-import { PoliciesApi, Policy, Prompt, StagesApi } from "@goauthentik/api";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { DualSelectPair } from "@goauthentik/elements/ak-dual-select/types.js";
 
 import { msg, str } from "@lit/localize";
+
+import { PoliciesApi, Policy, Prompt, StagesApi } from "@goauthentik/api";
 
 const promptToSelect = (p: Prompt) => [
     p.pk,

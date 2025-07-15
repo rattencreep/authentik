@@ -1,8 +1,8 @@
-import FlowSearch from "./FlowSearch.js";
+import { customElement, property } from "lit/decorators.js";
 
 import type { Flow } from "@goauthentik/api";
 
-import { customElement, property } from "lit/decorators.js";
+import FlowSearch from "./FlowSearch";
 
 /**
  * Search for flows that may have a fallback specified by the brand settings

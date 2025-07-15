@@ -1,27 +1,26 @@
-import "#admin/policies/BoundPoliciesList";
-import "#admin/providers/rac/EndpointForm";
-import "#admin/rbac/ObjectPermissionModal";
-import "#elements/buttons/SpinnerButton/index";
-import "#elements/forms/DeleteBulkForm";
-import "#elements/forms/ModalForm";
+import "@goauthentik/admin/policies/BoundPoliciesList";
+import "@goauthentik/admin/providers/rac/EndpointForm";
+import "@goauthentik/admin/rbac/ObjectPermissionModal";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/elements/buttons/SpinnerButton";
+import "@goauthentik/elements/forms/DeleteBulkForm";
+import "@goauthentik/elements/forms/ModalForm";
+import { PaginatedResponse, Table } from "@goauthentik/elements/table/Table";
+import { TableColumn } from "@goauthentik/elements/table/Table";
 import "@patternfly/elements/pf-tooltip/pf-tooltip.js";
 
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { PaginatedResponse, Table, TableColumn } from "#elements/table/Table";
-
-import {
-    Endpoint,
-    RacApi,
-    RACProvider,
-    RbacPermissionsAssignedByUsersListModelEnum,
-} from "@goauthentik/api";
-
 import { msg } from "@lit/localize";
-import { CSSResult, html, TemplateResult } from "lit";
+import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 import PFDescriptionList from "@patternfly/patternfly/components/DescriptionList/description-list.css";
+
+import {
+    Endpoint,
+    RACProvider,
+    RacApi,
+    RbacPermissionsAssignedByUsersListModelEnum,
+} from "@goauthentik/api";
 
 @customElement("ak-rac-endpoint-list")
 export class EndpointListPage extends Table<Endpoint> {
@@ -39,7 +38,9 @@ export class EndpointListPage extends Table<Endpoint> {
     @property({ attribute: false })
     provider?: RACProvider;
 
-    static styles: CSSResult[] = [...super.styles, PFDescriptionList];
+    static get styles(): CSSResult[] {
+        return super.styles.concat(PFDescriptionList);
+    }
 
     async apiEndpoint(): Promise<PaginatedResponse<Endpoint>> {
         return new RacApi(DEFAULT_CONFIG).racEndpointsList({

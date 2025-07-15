@@ -1,9 +1,10 @@
 import "#components/ak-page-header";
-
+import { updateURLParams } from "#elements/router/RouteMatch";
 import { Table } from "#elements/table/Table";
 
 import { msg } from "@lit/localize";
-import { CSSResult, html, nothing, TemplateResult } from "lit";
+import { CSSResult, nothing } from "lit";
+import { TemplateResult, html } from "lit";
 import { ifDefined } from "lit/directives/if-defined.js";
 
 import PFContent from "@patternfly/patternfly/components/Content/content.css";
@@ -15,7 +16,9 @@ export abstract class TablePage<T> extends Table<T> {
     abstract pageDescription(): string | undefined;
     abstract pageIcon(): string;
 
-    static styles: CSSResult[] = [...super.styles, PFPage, PFContent, PFSidebar];
+    static get styles(): CSSResult[] {
+        return super.styles.concat(PFPage, PFContent, PFSidebar);
+    }
 
     renderSidebarBefore(): TemplateResult {
         return html``;
@@ -39,8 +42,7 @@ export abstract class TablePage<T> extends Table<T> {
         return super.renderEmpty(html`
             ${inner
                 ? inner
-                : html`<ak-empty-state icon=${this.pageIcon()}
-                      ><span>${msg("No objects found.")}</span>
+                : html`<ak-empty-state icon=${this.pageIcon()} header="${msg("No objects found.")}">
                       <div slot="body">
                           ${this.searchEnabled() ? this.renderEmptyClearSearch() : nothing}
                       </div>

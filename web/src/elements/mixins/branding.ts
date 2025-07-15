@@ -1,10 +1,9 @@
 import { DefaultBrand } from "#common/ui/config";
-
 import { createMixin } from "#elements/types";
 
-import type { CurrentBrand, FooterLink } from "@goauthentik/api";
+import { Context, consume, createContext } from "@lit/context";
 
-import { consume, Context, createContext } from "@lit/context";
+import type { CurrentBrand, FooterLink } from "@goauthentik/api";
 
 /**
  * The Lit context for application branding.

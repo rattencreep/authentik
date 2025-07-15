@@ -1,11 +1,10 @@
-import "#elements/messages/MessageContainer";
-import "../ak-number-input.js";
-
-import AkNumberInput from "../ak-number-input.js";
-
+import "@goauthentik/elements/messages/MessageContainer";
 import { Meta } from "@storybook/web-components";
 
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
+
+import "../ak-number-input";
+import AkNumberInput from "../ak-number-input";
 
 const metadata: Meta<AkNumberInput> = {
     title: "Components / Number Input",

@@ -1,5 +1,4 @@
 import { DEFAULT_CONFIG } from "#common/api/config";
-
 import {
     DataProvision,
     DualSelectPair,

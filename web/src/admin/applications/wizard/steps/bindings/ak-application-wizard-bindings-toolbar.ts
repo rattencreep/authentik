@@ -1,4 +1,4 @@
-import { AKElement } from "#elements/Base";
+import { AKElement } from "@goauthentik/elements/Base";
 
 import { msg } from "@lit/localize";
 import { html } from "lit";
@@ -10,7 +10,9 @@ import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 @customElement("ak-application-wizard-bindings-toolbar")
 export class ApplicationWizardBindingsToolbar extends AKElement {
-    static styles = [PFBase, PFButton, PFToolbar];
+    static get styles() {
+        return [PFBase, PFButton, PFToolbar];
+    }
 
     @property({ type: Boolean, attribute: "can-delete", reflect: true })
     canDelete = false;

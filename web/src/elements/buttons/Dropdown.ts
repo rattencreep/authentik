@@ -1,8 +1,7 @@
-import { EVENT_REFRESH } from "#common/constants";
+import { EVENT_REFRESH } from "@goauthentik/common/constants";
+import { AKElement } from "@goauthentik/elements/Base";
 
-import { AKElement } from "#elements/Base";
-
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
 @customElement("ak-dropdown")

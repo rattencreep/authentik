@@ -1,11 +1,13 @@
-import "#elements/forms/FormGroup";
-import "#elements/forms/HorizontalFormElement";
-import "#elements/forms/SearchSelect/index";
+import { RenderFlowOption } from "@goauthentik/admin/flows/utils";
+import { BaseStageForm } from "@goauthentik/admin/stages/BaseStageForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/elements/forms/FormGroup";
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import "@goauthentik/elements/forms/SearchSelect";
 
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { RenderFlowOption } from "#admin/flows/utils";
-import { BaseStageForm } from "#admin/stages/BaseStageForm";
+import { msg } from "@lit/localize";
+import { TemplateResult, html } from "lit";
+import { customElement } from "lit/decorators.js";
 
 import {
     AuthenticatorTOTPStage,
@@ -16,10 +18,6 @@ import {
     FlowsInstancesListRequest,
     StagesApi,
 } from "@goauthentik/api";
-
-import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
-import { customElement } from "lit/decorators.js";
 
 @customElement("ak-stage-authenticator-totp-form")
 export class AuthenticatorTOTPStageForm extends BaseStageForm<AuthenticatorTOTPStage> {
@@ -47,7 +45,7 @@ export class AuthenticatorTOTPStageForm extends BaseStageForm<AuthenticatorTOTPS
                     "Stage used to configure a TOTP authenticator (i.e. Authy/Google Authenticator).",
                 )}
             </span>
-            <ak-form-element-horizontal label=${msg("Name")} required name="name">
+            <ak-form-element-horizontal label=${msg("Name")} ?required=${true} name="name">
                 <input
                     type="text"
                     value="${this.instance?.name ?? ""}"
@@ -71,10 +69,14 @@ export class AuthenticatorTOTPStageForm extends BaseStageForm<AuthenticatorTOTPS
                     )}
                 </p>
             </ak-form-element-horizontal>
-            <ak-form-group expanded>
+            <ak-form-group .expanded=${true}>
                 <span slot="header"> ${msg("Stage-specific settings")} </span>
                 <div slot="body" class="pf-c-form">
-                    <ak-form-element-horizontal label=${msg("Digits")} required name="digits">
+                    <ak-form-element-horizontal
+                        label=${msg("Digits")}
+                        ?required=${true}
+                        name="digits"
+                    >
                         <select name="users" class="pf-c-form-control">
                             <option
                                 value="${DigitsEnum._6}"
@@ -123,7 +125,7 @@ export class AuthenticatorTOTPStageForm extends BaseStageForm<AuthenticatorTOTPS
                             .selected=${(flow: Flow): boolean => {
                                 return this.instance?.configureFlow === flow.pk;
                             }}
-                            blankable
+                            ?blankable=${true}
                         >
                         </ak-search-select>
                         <p class="pf-c-form__helper-text">

@@ -1,11 +1,10 @@
-import "#elements/messages/MessageContainer";
-import "./ak-token-copy-button.js";
-
-import AKTokenCopyButton from "./ak-token-copy-button.js";
-
+import "@goauthentik/elements/messages/MessageContainer";
 import { Meta } from "@storybook/web-components";
 
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
+
+import "./ak-token-copy-button";
+import AKTokenCopyButton from "./ak-token-copy-button";
 
 // For this test, we want each key to be unique so that the tester can
 // be assured that the returned result is in fact going into the

@@ -1,13 +1,11 @@
-import "#elements/forms/SearchSelect/ak-search-select-view";
-
-import { groupedSampleData, sampleData } from "./sampleData.js";
-
-import { SearchSelectView } from "#elements/forms/SearchSelect/ak-search-select-view";
-
+import "@goauthentik/elements/forms/SearchSelect/ak-search-select-view.js";
+import { SearchSelectView } from "@goauthentik/elements/forms/SearchSelect/ak-search-select-view.js";
 import { Meta } from "@storybook/web-components";
 import { slug } from "github-slugger";
 
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
+
+import { groupedSampleData, sampleData } from "./sampleData.js";
 
 const metadata: Meta<SearchSelectView> = {
     title: "Elements / Search Select / View Handler ",

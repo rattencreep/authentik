@@ -3,11 +3,9 @@
  *
  * @runtime node
  */
-
+import { DistDirectoryName } from "#paths";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-
-import { DistDirectoryName } from "#paths";
 
 const relativeDirname = dirname(fileURLToPath(import.meta.url));
 
@@ -66,7 +64,7 @@ export const EntryPoint = /** @type {const} */ ({
         in: resolve(PackageRoot, "src", "flow", "index.entrypoint.ts"),
         out: resolve(DistDirectory, "flow", "FlowInterface"),
     },
-    StandaloneAPI: {
+    Standalone: {
         in: resolve(PackageRoot, "src", "standalone", "api-browser/index.entrypoint.ts"),
         out: resolve(DistDirectory, "standalone", "api-browser", "index"),
     },

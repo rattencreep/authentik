@@ -1,12 +1,11 @@
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { PaginatedResponse, Table, TableColumn } from "#elements/table/Table";
-
-import { SCIMSourceUser, SourcesApi } from "@goauthentik/api";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { PaginatedResponse, Table, TableColumn } from "@goauthentik/elements/table/Table";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
+
+import { SCIMSourceUser, SourcesApi } from "@goauthentik/api";
 
 @customElement("ak-source-scim-users-list")
 export class SCIMSourceUserList extends Table<SCIMSourceUser> {
@@ -43,7 +42,7 @@ export class SCIMSourceUserList extends Table<SCIMSourceUser> {
                 <div>${item.userObj.username}</div>
                 <small>${item.userObj.name}</small>
             </a>`,
-            html`${item.externalId}`,
+            html`${item.id}`,
         ];
     }
 }

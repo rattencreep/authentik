@@ -1,4 +1,6 @@
+import { fromByteArray } from "base64-js";
 import "formdata-polyfill";
+import $ from "jquery";
 import "weakmap-polyfill";
 
 import {
@@ -13,9 +15,6 @@ import {
     type PasswordChallenge,
     type RedirectChallenge,
 } from "@goauthentik/api";
-
-import { fromByteArray } from "base64-js";
-import $ from "jquery";
 
 interface GlobalAuthentik {
     brand: {
@@ -404,9 +403,6 @@ class AuthenticatorValidateStage extends Stage<AuthenticatorValidationChallenge>
     }
 
     render() {
-        if (this.challenge.deviceChallenges.length === 1) {
-            this.deviceChallenge = this.challenge.deviceChallenges[0];
-        }
         if (!this.deviceChallenge) {
             return this.renderChallengePicker();
         }
@@ -435,7 +431,9 @@ class AuthenticatorValidateStage extends Stage<AuthenticatorValidationChallenge>
                 ${
                     challenges.length > 0
                         ? "<p>Select an authentication method.</p>"
-                        : `<p>No compatible authentication method available</p>`
+                        : `
+                    <p>No compatible authentication method available</p>
+                    `
                 }
                 ${challenges
                     .map((challenge) => {

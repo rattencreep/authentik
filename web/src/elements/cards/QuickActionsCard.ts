@@ -1,6 +1,5 @@
-import "#elements/cards/AggregateCard";
-
-import { AKElement } from "#elements/Base";
+import { AKElement } from "@goauthentik/elements/Base";
+import "@goauthentik/elements/cards/AggregateCard.js";
 
 import { msg } from "@lit/localize";
 import { html } from "lit";
@@ -25,7 +24,9 @@ export interface IQuickActionsCard {
  */
 @customElement("ak-quick-actions-card")
 export class QuickActionsCard extends AKElement implements IQuickActionsCard {
-    static styles = [PFBase, PFList];
+    static get styles() {
+        return [PFBase, PFList];
+    }
 
     /**
      * Card title

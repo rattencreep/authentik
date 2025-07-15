@@ -1,10 +1,10 @@
-import "./SyncStatusCard.js";
-
-import { LogLevelEnum, SyncStatus, SystemTaskStatusEnum } from "@goauthentik/api";
-
 import type { Meta, StoryObj } from "@storybook/web-components";
 
 import { html } from "lit";
+
+import { LogLevelEnum, SyncStatus, SystemTaskStatusEnum } from "@goauthentik/api";
+
+import "./SyncStatusCard";
 
 const metadata: Meta<SyncStatus> = {
     title: "Elements/<ak-sync-status-card>",

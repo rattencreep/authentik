@@ -1,4 +1,4 @@
-import { AKElement } from "#elements/Base";
+import { AKElement } from "@goauthentik/elements/Base";
 
 import { CSSResult } from "lit";
 import { property } from "lit/decorators.js";
@@ -15,5 +15,7 @@ export abstract class BaseUserSettings extends AKElement {
     @property()
     configureUrl?: string;
 
-    static styles: CSSResult[] = [PFBase, PFButton, PFForm, PFFormControl];
+    static get styles(): CSSResult[] {
+        return [PFBase, PFButton, PFForm, PFFormControl];
+    }
 }

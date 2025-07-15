@@ -1,10 +1,9 @@
-import "../Divider.js";
-
-import { Divider } from "../Divider.js";
-
 import type { Meta, StoryObj } from "@storybook/web-components";
 
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
+
+import { Divider } from "../Divider.js";
+import "../Divider.js";
 
 const metadata: Meta<Divider> = {
     title: "Elements/<ak-divider>",

@@ -8,22 +8,18 @@ import "#admin/admin-overview/cards/WorkerStatusCard";
 import "#admin/admin-overview/charts/AdminLoginAuthorizeChart";
 import "#admin/admin-overview/charts/OutpostStatusChart";
 import "#admin/admin-overview/charts/SyncStatusChart";
-import "#components/ak-page-header";
-import "#elements/cards/AggregatePromiseCard";
-import "#elements/cards/QuickActionsCard";
-
 import { me } from "#common/users";
-
+import "#components/ak-page-header";
 import { AKElement } from "#elements/Base";
+import "#elements/cards/AggregatePromiseCard";
 import type { QuickAction } from "#elements/cards/QuickActionsCard";
+import "#elements/cards/QuickActionsCard";
 import { WithLicenseSummary } from "#elements/mixins/license";
 import { paramURL } from "#elements/router/RouterOutlet";
-
-import { SessionUser } from "@goauthentik/api";
 import { createReleaseNotesURL } from "@goauthentik/core/version";
 
 import { msg, str } from "@lit/localize";
-import { css, CSSResult, html, nothing, TemplateResult } from "lit";
+import { CSSResult, TemplateResult, css, html, nothing } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 
@@ -33,38 +29,42 @@ import PFPage from "@patternfly/patternfly/components/Page/page.css";
 import PFGrid from "@patternfly/patternfly/layouts/Grid/grid.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
+import { SessionUser } from "@goauthentik/api";
+
 const AdminOverviewBase = WithLicenseSummary(AKElement);
 
 @customElement("ak-admin-overview")
 export class AdminOverviewPage extends AdminOverviewBase {
-    static styles: CSSResult[] = [
-        PFBase,
-        PFGrid,
-        PFPage,
-        PFContent,
-        PFDivider,
-        css`
-            .pf-l-grid__item {
-                height: 100%;
-            }
-            .pf-l-grid__item.big-graph-container {
-                height: 35em;
-            }
-            .card-container {
-                max-height: 10em;
-            }
-            .ak-external-link {
-                display: inline-block;
-                margin-left: 0.175rem;
-                vertical-align: super;
-                line-height: normal;
-                font-size: var(--pf-global--icon--FontSize--sm);
-            }
-        `,
-    ];
+    static get styles(): CSSResult[] {
+        return [
+            PFBase,
+            PFGrid,
+            PFPage,
+            PFContent,
+            PFDivider,
+            css`
+                .pf-l-grid__item {
+                    height: 100%;
+                }
+                .pf-l-grid__item.big-graph-container {
+                    height: 35em;
+                }
+                .card-container {
+                    max-height: 10em;
+                }
+                .ak-external-link {
+                    display: inline-block;
+                    margin-left: 0.175rem;
+                    vertical-align: super;
+                    line-height: normal;
+                    font-size: var(--pf-global--icon--FontSize--sm);
+                }
+            `,
+        ];
+    }
 
     quickActions: QuickAction[] = [
-        [msg("Create a new application"), paramURL("/core/applications", { createWizard: true })],
+        [msg("Create a new application"), paramURL("/core/applications", { createForm: true })],
         [msg("Check the logs"), paramURL("/events/log")],
         [msg("Explore integrations"), "https://goauthentik.io/integrations/", true],
         [msg("Manage users"), paramURL("/identity/users")],
@@ -88,6 +88,7 @@ export class AdminOverviewPage extends AdminOverviewBase {
         return html`<ak-page-header
                 header=${this.user ? msg(str`Welcome, ${username || ""}.`) : msg("Welcome.")}
                 description=${msg("General system status")}
+                ?hasIcon=${false}
             >
             </ak-page-header>
             <section class="pf-c-page__main-section">

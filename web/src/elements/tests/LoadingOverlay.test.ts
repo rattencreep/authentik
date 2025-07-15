@@ -1,12 +1,10 @@
-import "../LoadingOverlay.js";
-
-import { akLoadingOverlay } from "../LoadingOverlay.js";
-
-import { render } from "#elements/tests/utils";
-
+import { render } from "@goauthentik/elements/tests/utils.js";
 import { $, expect } from "@wdio/globals";
 
 import { html } from "lit";
+
+import "../LoadingOverlay.js";
+import { akLoadingOverlay } from "../LoadingOverlay.js";
 
 describe("ak-loading-overlay", () => {
     it("should render the default loader", async () => {

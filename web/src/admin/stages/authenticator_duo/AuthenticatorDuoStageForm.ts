@@ -1,12 +1,13 @@
-import "#components/ak-secret-text-input";
-import "#elements/forms/FormGroup";
-import "#elements/forms/HorizontalFormElement";
-import "#elements/forms/SearchSelect/index";
+import { RenderFlowOption } from "@goauthentik/admin/flows/utils";
+import { BaseStageForm } from "@goauthentik/admin/stages/BaseStageForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/elements/forms/FormGroup";
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import "@goauthentik/elements/forms/SearchSelect";
 
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { RenderFlowOption } from "#admin/flows/utils";
-import { BaseStageForm } from "#admin/stages/BaseStageForm";
+import { msg } from "@lit/localize";
+import { TemplateResult, html } from "lit";
+import { customElement } from "lit/decorators.js";
 
 import {
     AuthenticatorDuoStage,
@@ -17,10 +18,6 @@ import {
     FlowsInstancesListRequest,
     StagesApi,
 } from "@goauthentik/api";
-
-import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
-import { customElement } from "lit/decorators.js";
 
 @customElement("ak-stage-authenticator-duo-form")
 export class AuthenticatorDuoStageForm extends BaseStageForm<AuthenticatorDuoStage> {
@@ -48,7 +45,7 @@ export class AuthenticatorDuoStageForm extends BaseStageForm<AuthenticatorDuoSta
                     "Stage used to configure a duo-based authenticator. This stage should be used for configuration flows.",
                 )}
             </span>
-            <ak-form-element-horizontal label=${msg("Name")} required name="name">
+            <ak-form-element-horizontal label=${msg("Name")} ?required=${true} name="name">
                 <input
                     type="text"
                     value="${this.instance?.name ?? ""}"
@@ -72,7 +69,11 @@ export class AuthenticatorDuoStageForm extends BaseStageForm<AuthenticatorDuoSta
                     )}
                 </p>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label=${msg("API Hostname")} required name="apiHostname">
+            <ak-form-element-horizontal
+                label=${msg("API Hostname")}
+                ?required=${true}
+                name="apiHostname"
+            >
                 <input
                     type="text"
                     value="${this.instance?.apiHostname ?? ""}"
@@ -82,12 +83,12 @@ export class AuthenticatorDuoStageForm extends BaseStageForm<AuthenticatorDuoSta
                     required
                 />
             </ak-form-element-horizontal>
-            <ak-form-group expanded>
+            <ak-form-group .expanded=${true}>
                 <span slot="header"> ${msg("Duo Auth API")} </span>
                 <div slot="body" class="pf-c-form">
                     <ak-form-element-horizontal
                         label=${msg("Integration key")}
-                        required
+                        ?required=${true}
                         name="clientId"
                     >
                         <input
@@ -97,13 +98,21 @@ export class AuthenticatorDuoStageForm extends BaseStageForm<AuthenticatorDuoSta
                             required
                         />
                     </ak-form-element-horizontal>
-                    <ak-secret-text-input
-                        name="clientSecret"
+                    <ak-form-element-horizontal
                         label=${msg("Secret key")}
-                        input-hint="code"
-                        required
-                        ?revealed=${this.instance === undefined}
-                    ></ak-secret-text-input>
+                        ?required=${true}
+                        ?writeOnly=${this.instance !== undefined}
+                        name="clientSecret"
+                    >
+                        <input
+                            type="text"
+                            value=""
+                            class="pf-c-form-control pf-m-monospace"
+                            autocomplete="off"
+                            spellcheck="false"
+                            required
+                        />
+                    </ak-form-element-horizontal>
                 </div>
             </ak-form-group>
             <ak-form-group>
@@ -127,15 +136,22 @@ export class AuthenticatorDuoStageForm extends BaseStageForm<AuthenticatorDuoSta
                             spellcheck="false"
                         />
                     </ak-form-element-horizontal>
-                    <ak-secret-text-input
-                        name="adminSecretKey"
+                    <ak-form-element-horizontal
                         label=${msg("Secret key")}
-                        input-hint="code"
-                        ?revealed=${this.instance === undefined}
-                    ></ak-secret-text-input>
+                        ?writeOnly=${this.instance !== undefined}
+                        name="adminSecretKey"
+                    >
+                        <input
+                            type="text"
+                            value=""
+                            class="pf-c-form-control pf-m-monospace"
+                            autocomplete="off"
+                            spellcheck="false"
+                        />
+                    </ak-form-element-horizontal>
                 </div>
             </ak-form-group>
-            <ak-form-group expanded>
+            <ak-form-group .expanded=${true}>
                 <span slot="header"> ${msg("Stage-specific settings")} </span>
                 <div slot="body" class="pf-c-form">
                     <ak-form-element-horizontal
@@ -169,7 +185,7 @@ export class AuthenticatorDuoStageForm extends BaseStageForm<AuthenticatorDuoSta
                             .selected=${(flow: Flow): boolean => {
                                 return this.instance?.configureFlow === flow.pk;
                             }}
-                            blankable
+                            ?blankable=${true}
                         >
                         </ak-search-select>
                         <p class="pf-c-form__helper-text">

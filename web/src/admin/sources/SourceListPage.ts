@@ -1,26 +1,25 @@
-import "#admin/sources/SourceWizard";
-import "#admin/sources/kerberos/KerberosSourceForm";
-import "#admin/sources/ldap/LDAPSourceForm";
-import "#admin/sources/oauth/OAuthSourceForm";
-import "#admin/sources/plex/PlexSourceForm";
-import "#admin/sources/saml/SAMLSourceForm";
-import "#elements/forms/DeleteBulkForm";
-import "#elements/forms/ModalForm";
-import "#elements/forms/ProxyForm";
+import "@goauthentik/admin/sources/SourceWizard";
+import "@goauthentik/admin/sources/kerberos/KerberosSourceForm";
+import "@goauthentik/admin/sources/ldap/LDAPSourceForm";
+import "@goauthentik/admin/sources/oauth/OAuthSourceForm";
+import "@goauthentik/admin/sources/plex/PlexSourceForm";
+import "@goauthentik/admin/sources/saml/SAMLSourceForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { PFColor } from "@goauthentik/elements/Label";
+import "@goauthentik/elements/forms/DeleteBulkForm";
+import "@goauthentik/elements/forms/ModalForm";
+import "@goauthentik/elements/forms/ProxyForm";
+import { PaginatedResponse } from "@goauthentik/elements/table/Table";
+import { TableColumn } from "@goauthentik/elements/table/Table";
+import { TablePage } from "@goauthentik/elements/table/TablePage";
 import "@patternfly/elements/pf-tooltip/pf-tooltip.js";
 
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { PFColor } from "#elements/Label";
-import { PaginatedResponse, TableColumn } from "#elements/table/Table";
-import { TablePage } from "#elements/table/TablePage";
-
-import { Source, SourcesApi } from "@goauthentik/api";
-
 import { msg, str } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+
+import { Source, SourcesApi } from "@goauthentik/api";
 
 @customElement("ak-source-list")
 export class SourceListPage extends TablePage<Source> {
@@ -91,7 +90,7 @@ export class SourceListPage extends TablePage<Source> {
                 <div>${item.name}</div>
                 ${item.enabled
                     ? html``
-                    : html`<ak-label color=${PFColor.Orange} compact>
+                    : html`<ak-label color=${PFColor.Orange} ?compact=${true}>
                           ${msg("Disabled")}</ak-label
                       >`}
             </a>`,
@@ -120,7 +119,7 @@ export class SourceListPage extends TablePage<Source> {
         return [
             html`<div>
                 <div>${item.name}</div>
-                <ak-label color=${PFColor.Grey} compact> ${msg("Built-in")}</ak-label>
+                <ak-label color=${PFColor.Grey} ?compact=${true}> ${msg("Built-in")}</ak-label>
             </div>`,
             html`${msg("Built-in")}`,
             html``,

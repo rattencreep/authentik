@@ -1,10 +1,9 @@
-import "../AggregatePromiseCard.js";
-
-import { render } from "#elements/tests/utils";
-
+import { render } from "@goauthentik/elements/tests/utils.js";
 import { $, expect } from "@wdio/globals";
 
 import { html } from "lit";
+
+import "../AggregatePromiseCard.js";
 
 const DELAY = 1000; // milliseconds
 

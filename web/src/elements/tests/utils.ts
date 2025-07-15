@@ -1,6 +1,6 @@
-import { applyDocumentTheme } from "#common/theme";
+import { applyDocumentTheme } from "@goauthentik/common/theme.js";
 
-import { render as litRender, TemplateResult } from "lit";
+import { TemplateResult, render as litRender } from "lit";
 
 /**
  * A special version of render that ensures our stylesheets:

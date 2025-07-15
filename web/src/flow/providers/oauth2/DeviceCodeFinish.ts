@@ -1,14 +1,12 @@
-import "#elements/EmptyState";
-import "#flow/FormStatic";
-import "#flow/components/ak-flow-card";
-
-import { BaseStage } from "#flow/stages/base";
-
-import { OAuthDeviceCodeFinishChallenge } from "@goauthentik/api";
+import "@goauthentik/elements/EmptyState";
+import "@goauthentik/flow/FormStatic";
+import { BaseStage } from "@goauthentik/flow/stages/base";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
+
+import { OAuthDeviceCodeFinishChallenge } from "@goauthentik/api";
 
 @customElement("ak-flow-provider-oauth2-code-finish")
 export class DeviceCodeFinish extends BaseStage<
@@ -16,12 +14,15 @@ export class DeviceCodeFinish extends BaseStage<
     OAuthDeviceCodeFinishChallenge
 > {
     render(): TemplateResult {
-        return html`<ak-flow-card .challenge=${this.challenge}>
-            <ak-empty-state icon="fas fa-check">
-                <span>${msg("You may close this page now.")}</span>
-                <span slot="body"> ${msg("You've successfully authenticated your device.")} </span>
-            </ak-empty-state>
-        </ak-flow-card>`;
+        if (!this.challenge) {
+            return html`<ak-empty-state loading> </ak-empty-state>`;
+        }
+        return html`<ak-empty-state
+            icon="fas fa-check"
+            header=${msg("You may close this page now.")}
+        >
+            <span slot="body"> ${msg("You've successfully authenticated your device.")} </span>
+        </ak-empty-state>`;
     }
 }
 

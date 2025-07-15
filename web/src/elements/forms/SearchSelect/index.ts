@@ -1,4 +1,4 @@
-import { SearchSelect } from "./ak-search-select.js";
+import { SearchSelect } from "./ak-search-select";
 
 export { SearchSelect };
 export default SearchSelect;

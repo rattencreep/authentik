@@ -1,16 +1,13 @@
-import "#elements/forms/SearchSelect/ak-search-select";
-import "#elements/forms/SearchSelect/ak-search-select-ez";
-
-import { sampleData } from "./sampleData.js";
-
-import { groupBy } from "#common/utils";
-
-import { SearchSelect } from "#elements/forms/SearchSelect/ak-search-select";
-import { type ISearchSelectApi } from "#elements/forms/SearchSelect/ak-search-select-ez";
-
+import { groupBy } from "@goauthentik/common/utils";
+import "@goauthentik/elements/forms/SearchSelect/ak-search-select";
+import { SearchSelect } from "@goauthentik/elements/forms/SearchSelect/ak-search-select";
+import "@goauthentik/elements/forms/SearchSelect/ak-search-select-ez";
+import { type ISearchSelectApi } from "@goauthentik/elements/forms/SearchSelect/ak-search-select-ez";
 import { Meta } from "@storybook/web-components";
 
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
+
+import { sampleData } from "./sampleData.js";
 
 type Sample = { name: string; pk: string; season: string[] };
 

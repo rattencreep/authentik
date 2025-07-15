@@ -1,11 +1,13 @@
-import "#components/ak-hidden-text-input";
-import "#elements/forms/HorizontalFormElement";
-import "#elements/forms/Radio";
-import "#elements/forms/SearchSelect/index";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import { ModelForm } from "@goauthentik/elements/forms/ModelForm";
+import "@goauthentik/elements/forms/Radio";
+import "@goauthentik/elements/forms/SearchSelect";
 
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { ModelForm } from "#elements/forms/ModelForm";
+import { msg } from "@lit/localize";
+import { TemplateResult, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 import {
     EventsApi,
@@ -15,11 +17,6 @@ import {
     PropertymappingsApi,
     PropertymappingsNotificationListRequest,
 } from "@goauthentik/api";
-
-import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
-import { customElement, property } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
 
 @customElement("ak-event-transport-form")
 export class TransportForm extends ModelForm<NotificationTransport, string> {
@@ -103,15 +100,18 @@ export class TransportForm extends ModelForm<NotificationTransport, string> {
                 >
                 </ak-radio>
             </ak-form-element-horizontal>
-            <ak-hidden-text-input
-                name="webhookUrl"
-                label=${msg("Webhook URL")}
-                value="${this.instance?.webhookUrl || ""}"
-                input-hint="code"
+            <ak-form-element-horizontal
                 ?hidden=${!this.showWebhook}
+                label=${msg("Webhook URL")}
+                name="webhookUrl"
                 required
             >
-            </ak-hidden-text-input>
+                <input
+                    type="text"
+                    value="${ifDefined(this.instance?.webhookUrl)}"
+                    class="pf-c-form-control"
+                />
+            </ak-form-element-horizontal>
             <ak-form-element-horizontal
                 ?hidden=${!this.showWebhook}
                 label=${msg("Webhook Body Mapping")}

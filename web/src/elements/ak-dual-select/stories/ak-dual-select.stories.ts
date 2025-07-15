@@ -1,12 +1,11 @@
-import "#elements/messages/MessageContainer";
-import "../ak-dual-select.js";
-
-import { AkDualSelect } from "../ak-dual-select.js";
-
+import "@goauthentik/elements/messages/MessageContainer";
 import { Meta, StoryObj } from "@storybook/web-components";
 import { slug } from "github-slugger";
 
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
+
+import "../ak-dual-select";
+import { AkDualSelect } from "../ak-dual-select";
 
 const metadata: Meta<AkDualSelect> = {
     title: "Elements / Dual Select / Dual Select",

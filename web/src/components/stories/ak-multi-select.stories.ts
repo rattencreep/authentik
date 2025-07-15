@@ -1,11 +1,10 @@
-import "#elements/messages/MessageContainer";
-import "../ak-multi-select.js";
-
-import AkMultiSelect from "../ak-multi-select.js";
-
+import "@goauthentik/elements/messages/MessageContainer";
 import { Meta } from "@storybook/web-components";
 
-import { html, render, TemplateResult } from "lit";
+import { TemplateResult, html, render } from "lit";
+
+import "../ak-multi-select";
+import AkMultiSelect from "../ak-multi-select";
 
 const metadata: Meta<AkMultiSelect> = {
     title: "Components / MultiSelect",

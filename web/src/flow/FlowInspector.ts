@@ -1,16 +1,15 @@
-import "#elements/EmptyState";
-import "#elements/Expand";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-import { EVENT_FLOW_ADVANCE, EVENT_FLOW_INSPECTOR_TOGGLE } from "#common/constants";
-import { APIError, parseAPIResponseError, pluckErrorDetail } from "#common/errors/network";
-
-import { AKElement } from "#elements/Base";
-
-import { FlowInspection, FlowsApi, Stage } from "@goauthentik/api";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { EVENT_FLOW_ADVANCE, EVENT_FLOW_INSPECTOR_TOGGLE } from "@goauthentik/common/constants";
+import {
+    APIError,
+    parseAPIResponseError,
+    pluckErrorDetail,
+} from "@goauthentik/common/errors/network";
+import { AKElement } from "@goauthentik/elements/Base";
+import "@goauthentik/elements/Expand";
 
 import { msg } from "@lit/localize";
-import { css, CSSResult, html, nothing, TemplateResult } from "lit";
+import { CSSResult, TemplateResult, css, html, nothing } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
@@ -20,6 +19,8 @@ import PFNotificationDrawer from "@patternfly/patternfly/components/Notification
 import PFProgressStepper from "@patternfly/patternfly/components/ProgressStepper/progress-stepper.css";
 import PFStack from "@patternfly/patternfly/layouts/Stack/stack.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
+
+import { FlowInspection, FlowsApi, Stage } from "@goauthentik/api";
 
 @customElement("ak-flow-inspector")
 export class FlowInspector extends AKElement {
@@ -32,29 +33,31 @@ export class FlowInspector extends AKElement {
     @property({ attribute: false })
     error?: APIError;
 
-    static styles: CSSResult[] = [
-        PFBase,
-        PFButton,
-        PFStack,
-        PFCard,
-        PFNotificationDrawer,
-        PFDescriptionList,
-        PFProgressStepper,
-        css`
-            .pf-c-drawer__body {
-                min-height: 100vh;
-                max-height: 100vh;
-            }
-            code.break {
-                word-break: break-all;
-            }
-            pre {
-                word-break: break-all;
-                overflow-x: hidden;
-                white-space: break-spaces;
-            }
-        `,
-    ];
+    static get styles(): CSSResult[] {
+        return [
+            PFBase,
+            PFButton,
+            PFStack,
+            PFCard,
+            PFNotificationDrawer,
+            PFDescriptionList,
+            PFProgressStepper,
+            css`
+                .pf-c-drawer__body {
+                    min-height: 100vh;
+                    max-height: 100vh;
+                }
+                code.break {
+                    word-break: break-all;
+                }
+                pre {
+                    word-break: break-all;
+                    overflow-x: hidden;
+                    white-space: break-spaces;
+                }
+            `,
+        ];
+    }
 
     constructor() {
         super();

@@ -1,19 +1,14 @@
-import "#components/ak-event-info";
-import "#components/ak-page-header";
-
+import { EventGeo, EventUser } from "#admin/events/utils";
 import { DEFAULT_CONFIG } from "#common/api/config";
 import { EventWithContext } from "#common/events";
 import { actionToLabel } from "#common/labels";
 import { formatElapsedTime } from "#common/temporal";
-
+import "#components/ak-event-info";
+import "#components/ak-page-header";
 import { AKElement } from "#elements/Base";
 
-import { EventGeo, renderEventUser } from "#admin/events/utils";
-
-import { EventsApi, EventToJSON } from "@goauthentik/api";
-
 import { msg, str } from "@lit/localize";
-import { CSSResult, html, PropertyValues, TemplateResult } from "lit";
+import { CSSResult, PropertyValues, TemplateResult, html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
 import PFCard from "@patternfly/patternfly/components/Card/card.css";
@@ -23,6 +18,8 @@ import PFPage from "@patternfly/patternfly/components/Page/page.css";
 import PFGrid from "@patternfly/patternfly/layouts/Grid/grid.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
+import { EventToJSON, EventsApi } from "@goauthentik/api";
+
 @customElement("ak-event-view")
 export class EventViewPage extends AKElement {
     @property({ type: String })
@@ -31,7 +28,9 @@ export class EventViewPage extends AKElement {
     @state()
     event!: EventWithContext;
 
-    static styles: CSSResult[] = [PFBase, PFGrid, PFDescriptionList, PFPage, PFContent, PFCard];
+    static get styles(): CSSResult[] {
+        return [PFBase, PFGrid, PFDescriptionList, PFPage, PFContent, PFCard];
+    }
 
     fetchEvent(eventUuid: string) {
         new EventsApi(DEFAULT_CONFIG).eventsEventsRetrieve({ eventUuid }).then((ev) => {
@@ -93,7 +92,7 @@ export class EventViewPage extends AKElement {
                                     </dt>
                                     <dd class="pf-c-description-list__description">
                                         <div class="pf-c-description-list__text">
-                                            ${renderEventUser(this.event)}
+                                            ${EventUser(this.event)}
                                         </div>
                                     </dd>
                                 </div>

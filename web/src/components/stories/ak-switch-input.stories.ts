@@ -1,15 +1,14 @@
-import "#elements/messages/MessageContainer";
-import "../ak-switch-input.js";
-
-import AkSwitchInput from "../ak-switch-input.js";
-
+import "@goauthentik/elements/messages/MessageContainer";
 import { Meta } from "@storybook/web-components";
 
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 
 // Necessary because we're NOT supplying the CSS for the interiors
 // in our "light" dom.
 import PFSwitch from "@patternfly/patternfly/components/Switch/switch.css";
+
+import "../ak-switch-input";
+import AkSwitchInput from "../ak-switch-input";
 
 const metadata: Meta<AkSwitchInput> = {
     title: "Components / Switch Input",

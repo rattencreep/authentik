@@ -1,17 +1,23 @@
 import "#admin/rbac/ObjectPermissionModal";
 import "#admin/stages/invitation/InvitationForm";
 import "#admin/stages/invitation/InvitationListLink";
+import { DEFAULT_CONFIG } from "#common/api/config";
+import { PFColor } from "#elements/Label";
 import "#elements/buttons/ModalButton";
 import "#elements/buttons/SpinnerButton/ak-spinner-button";
 import "#elements/forms/DeleteBulkForm";
 import "#elements/forms/ModalForm";
+import { PaginatedResponse } from "#elements/table/Table";
+import { TableColumn } from "#elements/table/Table";
+import { TablePage } from "#elements/table/TablePage";
 import "@patternfly/elements/pf-tooltip/pf-tooltip.js";
 
-import { DEFAULT_CONFIG } from "#common/api/config";
+import { msg } from "@lit/localize";
+import { CSSResult, TemplateResult, html } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 
-import { PFColor } from "#elements/Label";
-import { PaginatedResponse, TableColumn } from "#elements/table/Table";
-import { TablePage } from "#elements/table/TablePage";
+import PFBanner from "@patternfly/patternfly/components/Banner/banner.css";
 
 import {
     FlowDesignationEnum,
@@ -19,13 +25,6 @@ import {
     RbacPermissionsAssignedByUsersListModelEnum,
     StagesApi,
 } from "@goauthentik/api";
-
-import { msg } from "@lit/localize";
-import { CSSResult, html, TemplateResult } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
-
-import PFBanner from "@patternfly/patternfly/components/Banner/banner.css";
 
 @customElement("ak-stage-invitation-list")
 export class InvitationListPage extends TablePage<Invitation> {
@@ -46,7 +45,9 @@ export class InvitationListPage extends TablePage<Invitation> {
         return "pf-icon pf-icon-migration";
     }
 
-    static styles: CSSResult[] = [...super.styles, PFBanner];
+    static get styles(): CSSResult[] {
+        return super.styles.concat(PFBanner);
+    }
 
     checkbox = true;
     clearOnRefresh = true;

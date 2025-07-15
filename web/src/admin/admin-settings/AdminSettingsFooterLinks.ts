@@ -1,8 +1,5 @@
-import { AkControlElement } from "#elements/AkControlElement";
-import { type Spread } from "#elements/types";
-
-import { FooterLink } from "@goauthentik/api";
-
+import { AkControlElement } from "@goauthentik/elements/AkControlElement.js";
+import { type Spread } from "@goauthentik/elements/types";
 import { spread } from "@open-wc/lit-helpers";
 
 import { msg } from "@lit/localize";
@@ -14,6 +11,8 @@ import PFFormControl from "@patternfly/patternfly/components/FormControl/form-co
 import PFInputGroup from "@patternfly/patternfly/components/InputGroup/input-group.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
+import { FooterLink } from "@goauthentik/api";
+
 export interface IFooterLinkInput {
     footerLink: FooterLink;
 }
@@ -24,17 +23,19 @@ const hasLegalScheme = (url: string) =>
 
 @customElement("ak-admin-settings-footer-link")
 export class FooterLinkInput extends AkControlElement<FooterLink> {
-    static styles = [
-        PFBase,
-        PFInputGroup,
-        PFFormControl,
-        css`
-            .pf-c-input-group input#linkname {
-                flex-grow: 1;
-                width: 8rem;
-            }
-        `,
-    ];
+    static get styles() {
+        return [
+            PFBase,
+            PFInputGroup,
+            PFFormControl,
+            css`
+                .pf-c-input-group input#linkname {
+                    flex-grow: 1;
+                    width: 8rem;
+                }
+            `,
+        ];
+    }
 
     @property({ type: Object, attribute: false })
     footerLink: FooterLink = {

@@ -1,24 +1,24 @@
-import "#admin/common/ak-flow-search/ak-source-flow-search";
-import "#components/ak-secret-text-input";
-import "#components/ak-secret-textarea-input";
-import "#components/ak-slug-input";
-import "#components/ak-switch-input";
-import "#components/ak-text-input";
-import "#components/ak-textarea-input";
-import "#elements/ak-dual-select/ak-dual-select-dynamic-selected-provider";
-import "#elements/forms/FormGroup";
-import "#elements/forms/HorizontalFormElement";
-import "#elements/forms/SearchSelect/index";
-
-import { propertyMappingsProvider, propertyMappingsSelector } from "./KerberosSourceFormHelpers.js";
-
-import { config, DEFAULT_CONFIG } from "#common/api/config";
-
 import { CapabilitiesEnum, WithCapabilitiesConfig } from "#elements/mixins/capabilities";
+import "@goauthentik/admin/common/ak-flow-search/ak-source-flow-search";
+import { iconHelperText, placeholderHelperText } from "@goauthentik/admin/helperText";
+import { BaseSourceForm } from "@goauthentik/admin/sources/BaseSourceForm";
+import {
+    GroupMatchingModeToLabel,
+    UserMatchingModeToLabel,
+} from "@goauthentik/admin/sources/oauth/utils";
+import { DEFAULT_CONFIG, config } from "@goauthentik/common/api/config";
+import "@goauthentik/components/ak-switch-input";
+import "@goauthentik/components/ak-text-input";
+import "@goauthentik/components/ak-textarea-input";
+import "@goauthentik/elements/ak-dual-select/ak-dual-select-dynamic-selected-provider.js";
+import "@goauthentik/elements/forms/FormGroup";
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import "@goauthentik/elements/forms/SearchSelect";
 
-import { iconHelperText, placeholderHelperText } from "#admin/helperText";
-import { BaseSourceForm } from "#admin/sources/BaseSourceForm";
-import { GroupMatchingModeToLabel, UserMatchingModeToLabel } from "#admin/sources/oauth/utils";
+import { msg } from "@lit/localize";
+import { TemplateResult, html } from "lit";
+import { customElement, state } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 import {
     FlowsInstancesListDesignationEnum,
@@ -30,10 +30,7 @@ import {
     UserMatchingModeEnum,
 } from "@goauthentik/api";
 
-import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
+import { propertyMappingsProvider, propertyMappingsSelector } from "./KerberosSourceFormHelpers.js";
 
 @customElement("ak-source-kerberos-form")
 export class KerberosSourceForm extends WithCapabilitiesConfig(BaseSourceForm<KerberosSource>) {
@@ -62,7 +59,7 @@ export class KerberosSourceForm extends WithCapabilitiesConfig(BaseSourceForm<Ke
         }
         const c = await config();
         if (c.capabilities.includes(CapabilitiesEnum.CanSaveMedia)) {
-            const icon = this.files().get("icon");
+            const icon = this.getFormFiles().icon;
             if (icon || this.clearIcon) {
                 await new SourcesApi(DEFAULT_CONFIG).sourcesAllSetIconCreate({
                     slug: source.slug,
@@ -88,13 +85,12 @@ export class KerberosSourceForm extends WithCapabilitiesConfig(BaseSourceForm<Ke
                 value=${ifDefined(this.instance?.name)}
                 required
             ></ak-text-input>
-            <ak-slug-input
+            <ak-text-input
                 name="slug"
-                value=${ifDefined(this.instance?.slug)}
                 label=${msg("Slug")}
+                value=${ifDefined(this.instance?.slug)}
                 required
-                input-hint="code"
-            ></ak-slug-input>
+            ></ak-text-input>
             <ak-switch-input
                 name="enabled"
                 ?checked=${this.instance?.enabled ?? true}
@@ -121,7 +117,7 @@ export class KerberosSourceForm extends WithCapabilitiesConfig(BaseSourceForm<Ke
                     "Enable this option to write password changes made in authentik back to Kerberos. Ignored if sync is disabled.",
                 )}
             ></ak-switch-input>
-            <ak-form-group expanded>
+            <ak-form-group .expanded=${true}>
                 <span slot="header"> ${msg("Realm settings")} </span>
                 <div slot="body" class="pf-c-form">
                     <ak-text-input
@@ -141,7 +137,7 @@ export class KerberosSourceForm extends WithCapabilitiesConfig(BaseSourceForm<Ke
                     ></ak-textarea-input>
                     <ak-form-element-horizontal
                         label=${msg("User matching mode")}
-                        required
+                        ?required=${true}
                         name="userMatchingMode"
                     >
                         <select class="pf-c-form-control">
@@ -184,7 +180,7 @@ export class KerberosSourceForm extends WithCapabilitiesConfig(BaseSourceForm<Ke
                     </ak-form-element-horizontal>
                     <ak-form-element-horizontal
                         label=${msg("Group matching mode")}
-                        required
+                        ?required=${true}
                         name="groupMatchingMode"
                     >
                         <select class="pf-c-form-control">
@@ -213,12 +209,12 @@ export class KerberosSourceForm extends WithCapabilitiesConfig(BaseSourceForm<Ke
                     </ak-form-element-horizontal>
                 </div>
             </ak-form-group>
-            <ak-form-group>
+            <ak-form-group .expanded=${false}>
                 <span slot="header"> ${msg("Sync connection settings")} </span>
                 <div slot="body" class="pf-c-form">
                     <ak-form-element-horizontal
                         label=${msg("KAdmin type")}
-                        required
+                        ?required=${true}
                         name="kadminType"
                     >
                         <ak-radio
@@ -250,22 +246,30 @@ export class KerberosSourceForm extends WithCapabilitiesConfig(BaseSourceForm<Ke
                         value=${ifDefined(this.instance?.syncPrincipal)}
                         help=${msg("Principal used to authenticate to the KDC for syncing.")}
                     ></ak-text-input>
-                    <ak-secret-text-input
+                    <ak-form-element-horizontal
                         name="syncPassword"
                         label=${msg("Sync password")}
-                        ?revealed=${this.instance === undefined}
-                        help=${msg(
-                            "Password used to authenticate to the KDC for syncing. Optional if Sync keytab or Sync credentials cache is provided.",
-                        )}
-                    ></ak-secret-text-input>
-                    <ak-secret-textarea-input
+                        ?writeOnly=${this.instance !== undefined}
+                    >
+                        <input type="text" value="" class="pf-c-form-control" />
+                        <p class="pf-c-form__helper-text">
+                            ${msg(
+                                "Password used to authenticate to the KDC for syncing. Optional if Sync keytab or Sync credentials cache is provided.",
+                            )}
+                        </p>
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal
                         name="syncKeytab"
                         label=${msg("Sync keytab")}
-                        ?revealed=${this.instance === undefined}
-                        help=${msg(
-                            "Keytab used to authenticate to the KDC for syncing. Optional if Sync password or Sync credentials cache is provided. Must be base64 encoded or in the form TYPE:residual.",
-                        )}
-                    ></ak-secret-textarea-input>
+                        ?writeOnly=${this.instance !== undefined}
+                    >
+                        <textarea class="pf-c-form-control"></textarea>
+                        <p class="pf-c-form__helper-text">
+                            ${msg(
+                                "Keytab used to authenticate to the KDC for syncing. Optional if Sync password or Sync credentials cache is provided. Must be base64 encoded or in the form TYPE:residual.",
+                            )}
+                        </p>
+                    </ak-form-element-horizontal>
                     <ak-text-input
                         name="syncCcache"
                         label=${msg("Sync credentials cache")}
@@ -276,7 +280,7 @@ export class KerberosSourceForm extends WithCapabilitiesConfig(BaseSourceForm<Ke
                     ></ak-text-input>
                 </div>
             </ak-form-group>
-            <ak-form-group>
+            <ak-form-group .expanded=${false}>
                 <span slot="header"> ${msg("SPNEGO settings")} </span>
                 <div slot="body" class="pf-c-form">
                     <ak-text-input
@@ -287,14 +291,18 @@ export class KerberosSourceForm extends WithCapabilitiesConfig(BaseSourceForm<Ke
                             "Force the use of a specific server name for SPNEGO. Must be in the form HTTP@domain",
                         )}
                     ></ak-text-input>
-                    <ak-secret-textarea-input
+                    <ak-form-element-horizontal
                         name="spnegoKeytab"
                         label=${msg("SPNEGO keytab")}
-                        ?revealed=${this.instance === undefined}
-                        help=${msg(
-                            "Keytab used for SPNEGO. Optional if SPNEGO credentials cache is provided. Must be base64 encoded or in the form TYPE:residual.",
-                        )}
-                    ></ak-secret-textarea-input>
+                        ?writeOnly=${this.instance !== undefined}
+                    >
+                        <textarea class="pf-c-form-control"></textarea>
+                        <p class="pf-c-form__helper-text">
+                            ${msg(
+                                "Keytab used for SPNEGO. Optional if SPNEGO credentials cache is provided. Must be base64 encoded or in the form TYPE:residual.",
+                            )}
+                        </p>
+                    </ak-form-element-horizontal>
                     <ak-text-input
                         name="spnegoCcache"
                         label=${msg("SPNEGO credentials cache")}
@@ -305,7 +313,7 @@ export class KerberosSourceForm extends WithCapabilitiesConfig(BaseSourceForm<Ke
                     ></ak-text-input>
                 </div>
             </ak-form-group>
-            <ak-form-group>
+            <ak-form-group ?expanded=${false}>
                 <span slot="header"> ${msg("Kerberos Attribute mapping")} </span>
                 <div slot="body" class="pf-c-form">
                     <ak-form-element-horizontal

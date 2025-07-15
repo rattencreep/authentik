@@ -1,4 +1,4 @@
-import { css, CSSResult } from "lit";
+import { CSSResult, css } from "lit";
 
 export function getCookie(name: string): string {
     let cookieValue = "";

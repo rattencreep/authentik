@@ -1,14 +1,11 @@
-import "#elements/wizard/ActionWizardPage";
-
-import { EVENT_REFRESH } from "#common/constants";
-
-import { ModalButton } from "#elements/buttons/ModalButton";
-import { WizardPage } from "#elements/wizard/WizardPage";
+import { ModalButton } from "@goauthentik/elements/buttons/ModalButton";
+import "@goauthentik/elements/wizard/ActionWizardPage";
+import { WizardPage } from "@goauthentik/elements/wizard/WizardPage";
 
 import { msg } from "@lit/localize";
 import { customElement } from "@lit/reactive-element/decorators/custom-element.js";
 import { property } from "@lit/reactive-element/decorators/property.js";
-import { css, CSSResult, html, nothing, TemplateResult } from "lit";
+import { CSSResult, TemplateResult, css, html, nothing } from "lit";
 import { state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 
@@ -24,15 +21,16 @@ export const ApplyActionsSlot = "apply-actions";
 
 @customElement("ak-wizard")
 export class Wizard extends ModalButton {
-    static styles: CSSResult[] = [
-        ...super.styles,
-        PFWizard,
-        css`
-            .pf-c-modal-box {
-                height: 75%;
-            }
-        `,
-    ];
+    static get styles(): CSSResult[] {
+        return super.styles.concat(
+            PFWizard,
+            css`
+                .pf-c-modal-box {
+                    height: 75%;
+                }
+            `,
+        );
+    }
 
     //#region Properties
 
@@ -52,13 +50,13 @@ export class Wizard extends ModalButton {
      * Header title of the wizard.
      */
     @property()
-    public header?: string;
+    header?: string;
 
     /**
      * Description of the wizard.
      */
     @property()
-    public description?: string;
+    description?: string;
 
     /**
      * Whether the wizard is valid and can proceed to the next step.
@@ -70,13 +68,15 @@ export class Wizard extends ModalButton {
      * Actions to display at the end of the wizard.
      */
     @property({ attribute: false })
-    public actions: WizardAction[] = [];
+    actions: WizardAction[] = [];
 
     @property({ attribute: false })
-    public finalHandler?: () => Promise<void>;
+    finalHandler = () => {
+        return Promise.resolve();
+    };
 
     @property({ attribute: false })
-    public state: { [key: string]: unknown } = {};
+    state: { [key: string]: unknown } = {};
 
     //#endregion
 
@@ -86,7 +86,7 @@ export class Wizard extends ModalButton {
      * Memoized step tag names.
      */
     @state()
-    protected _steps: string[] = [];
+    _steps: string[] = [];
 
     /**
      * Step tag names present in the wizard.
@@ -123,25 +123,25 @@ export class Wizard extends ModalButton {
     /**
      * Initial steps to reset to.
      */
-    #initialSteps: string[] = [];
+    _initialSteps: string[] = [];
 
     @state()
-    protected activeStep: WizardPage | null = null;
+    _activeStep?: WizardPage;
 
-    set activeStepElement(nextActiveStepElement: WizardPage | null) {
-        this.activeStep = nextActiveStepElement;
+    set activeStepElement(nextActiveStepElement: WizardPage | undefined) {
+        this._activeStep = nextActiveStepElement;
 
-        if (!this.activeStep) return;
+        if (!this._activeStep) return;
 
-        this.activeStep.activeCallback();
-        this.activeStep.requestUpdate();
+        this._activeStep.activeCallback();
+        this._activeStep.requestUpdate();
     }
 
     /**
      * The active step element being displayed.
      */
-    get activeStepElement(): WizardPage | null {
-        return this.activeStep;
+    get activeStepElement(): WizardPage | undefined {
+        return this._activeStep;
     }
 
     getStepElementByIndex(stepIndex: number): WizardPage | null {
@@ -154,7 +154,69 @@ export class Wizard extends ModalButton {
         return this.querySelector<WizardPage>(`[slot=${stepName}]`);
     }
 
-    #gatherSteps() {
+    //#endregion
+
+    //#region Lifecycle
+
+    firstUpdated(): void {
+        this._initialSteps = this._steps;
+    }
+
+    /**
+     * Add action to the beginning of the list.
+     */
+    addActionBefore(displayName: string, run: () => Promise<boolean>): void {
+        this.actions.unshift({
+            displayName,
+            run,
+        });
+    }
+
+    /**
+     * Add action at the end of the list.
+     *
+     * @todo: Is this used?
+     */
+    addActionAfter(displayName: string, run: () => Promise<boolean>): void {
+        this.actions.push({
+            displayName,
+            run,
+        });
+    }
+
+    /**
+     * Reset the wizard to it's initial state.
+     */
+    reset = (ev?: Event) => {
+        if (ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+        }
+        this.open = false;
+
+        this.querySelectorAll("[data-wizardmanaged=true]").forEach((el) => {
+            el.remove();
+        });
+
+        for (const step of this.steps) {
+            const stepElement = this.getStepElementByName(step);
+
+            stepElement?.reset?.();
+        }
+
+        this.steps = this._initialSteps;
+        this.actions = [];
+        this.state = {};
+        this.activeStepElement = undefined;
+        this.canBack = true;
+        this.canCancel = true;
+    };
+
+    //#endregion
+
+    //#region Rendering
+
+    renderModalInner(): TemplateResult {
         const firstPage = this.getStepElementByIndex(0);
 
         if (!this.activeStepElement && firstPage) {
@@ -172,78 +234,7 @@ export class Wizard extends ModalButton {
             lastPage = activeStepIndex === this.steps.length - 1;
         }
 
-        return {
-            firstPage,
-            activeStepIndex,
-            lastPage,
-        };
-    }
-
-    //#endregion
-
-    //#region Lifecycle
-
-    public firstUpdated(): void {
-        this.#initialSteps = this._steps;
-    }
-
-    public connectedCallback(): void {
-        super.connectedCallback();
-        this.addEventListener(EVENT_REFRESH, this.#refreshListener);
-    }
-
-    public disconnectedCallback(): void {
-        super.disconnectedCallback();
-        this.removeEventListener(EVENT_REFRESH, this.#refreshListener);
-    }
-
-    //#endregion
-
-    //#region Event Listeners
-
-    /**
-     * Reset the wizard to its initial state.
-     */
-    #reset = (event?: Event) => {
-        event?.preventDefault();
-        event?.stopPropagation();
-
-        this.open = false;
-
-        for (const element of this.querySelectorAll("[data-wizardmanaged=true]")) {
-            element.remove();
-        }
-
-        for (const step of this.steps) {
-            const stepElement = this.getStepElementByName(step);
-
-            stepElement?.reset?.();
-        }
-
-        this.steps = this.#initialSteps;
-        this.actions = [];
-        this.state = {};
-        this.canBack = true;
-        this.canCancel = true;
-        this.activeStepElement = null;
-    };
-
-    #refreshListener = (event: Event) => {
-        const { lastPage } = this.#gatherSteps();
-
-        if (!lastPage) {
-            event.stopImmediatePropagation();
-        }
-    };
-
-    //#endregion
-
-    //#region Rendering
-
-    public renderModalInner(): TemplateResult {
-        const { activeStepIndex, lastPage } = this.#gatherSteps();
-
-        const navigatePrevious = () => {
+        const navigateToPreviousStep = () => {
             const prevPage = this.getStepElementByIndex(activeStepIndex - 1);
 
             if (prevPage) {
@@ -251,28 +242,6 @@ export class Wizard extends ModalButton {
             }
         };
 
-        const navigateNext = async (): Promise<void> => {
-            if (!this.activeStepElement) return;
-
-            if (this.activeStepElement.nextCallback) {
-                const completedStep = await this.activeStepElement.nextCallback();
-
-                if (!completedStep) return;
-
-                if (lastPage) {
-                    await this.finalHandler?.();
-                    this.#reset();
-
-                    return;
-                }
-            }
-
-            const nextPage = this.getStepElementByIndex(activeStepIndex + 1);
-
-            if (nextPage) {
-                this.activeStepElement = nextPage;
-            }
-        };
         return html`<div class="pf-c-wizard">
             <div class="pf-c-wizard__header">
                 ${this.canCancel
@@ -280,7 +249,7 @@ export class Wizard extends ModalButton {
                           class="pf-c-button pf-m-plain pf-c-wizard__close"
                           type="button"
                           aria-label="${msg("Close")}"
-                          @click=${this.#reset}
+                          @click=${(ev: Event) => this.reset(ev)}
                       >
                           <i class="fas fa-times" aria-hidden="true"></i>
                       </button>`
@@ -306,7 +275,6 @@ export class Wizard extends ModalButton {
                                                 "pf-c-wizard__nav-link": true,
                                                 "pf-m-current": idx === activeStepIndex,
                                             })}
-                                            type="button"
                                             ?disabled=${activeStepIndex < idx}
                                             @click=${() => {
                                                 this.activeStepElement = stepEl;
@@ -328,9 +296,25 @@ export class Wizard extends ModalButton {
                 <footer class="pf-c-wizard__footer">
                     <button
                         class="pf-c-button pf-m-primary"
+                        type="submit"
                         ?disabled=${!this.isValid}
-                        type="button"
-                        @click=${navigateNext}
+                        @click=${async () => {
+                            const completedStep = await this.activeStepElement?.nextCallback();
+                            if (!completedStep) return;
+
+                            if (lastPage) {
+                                await this.finalHandler();
+                                this.reset();
+
+                                return;
+                            }
+
+                            const nextPage = this.getStepElementByIndex(activeStepIndex + 1);
+
+                            if (nextPage) {
+                                this.activeStepElement = nextPage;
+                            }
+                        }}
                     >
                         ${lastPage ? msg("Finish") : msg("Next")}
                     </button>
@@ -341,7 +325,7 @@ export class Wizard extends ModalButton {
                               <button
                                   class="pf-c-button pf-m-secondary"
                                   type="button"
-                                  @click=${navigatePrevious}
+                                  @click=${navigateToPreviousStep}
                               >
                                   ${msg("Back")}
                               </button>
@@ -352,7 +336,7 @@ export class Wizard extends ModalButton {
                               <button
                                   class="pf-c-button pf-m-link"
                                   type="button"
-                                  @click=${this.#reset}
+                                  @click=${(ev: Event) => this.reset(ev)}
                               >
                                   ${msg("Cancel")}
                               </button>

@@ -1,9 +1,11 @@
-import "#elements/forms/HorizontalFormElement";
+import { RenderFlowOption } from "@goauthentik/admin/flows/utils";
+import { BaseStageForm } from "@goauthentik/admin/stages/BaseStageForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/elements/forms/HorizontalFormElement";
 
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { RenderFlowOption } from "#admin/flows/utils";
-import { BaseStageForm } from "#admin/stages/BaseStageForm";
+import { msg } from "@lit/localize";
+import { TemplateResult, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
 
 import {
     Flow,
@@ -13,10 +15,6 @@ import {
     RedirectStageModeEnum,
     StagesApi,
 } from "@goauthentik/api";
-
-import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
-import { customElement, property } from "lit/decorators.js";
 
 @customElement("ak-stage-redirect-form")
 export class RedirectStageForm extends BaseStageForm<RedirectStage> {

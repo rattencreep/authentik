@@ -7,4 +7,6 @@
  * @ignore
  */
 
+export {};
+
 export default {};

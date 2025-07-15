@@ -1,26 +1,25 @@
-import "#admin/flows/StageBindingForm";
-import "#admin/policies/BoundPoliciesList";
-import "#admin/rbac/ObjectPermissionModal";
-import "#admin/stages/StageWizard";
-import "#elements/Tabs";
-import "#elements/forms/DeleteBulkForm";
-import "#elements/forms/ModalForm";
-import "#elements/forms/ProxyForm";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { PaginatedResponse, Table, TableColumn } from "#elements/table/Table";
-
-import {
-    FlowsApi,
-    FlowStageBinding,
-    RbacPermissionsAssignedByUsersListModelEnum,
-} from "@goauthentik/api";
+import "@goauthentik/admin/flows/StageBindingForm";
+import "@goauthentik/admin/policies/BoundPoliciesList";
+import "@goauthentik/admin/rbac/ObjectPermissionModal";
+import "@goauthentik/admin/stages/StageWizard";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/elements/Tabs";
+import "@goauthentik/elements/forms/DeleteBulkForm";
+import "@goauthentik/elements/forms/ModalForm";
+import "@goauthentik/elements/forms/ProxyForm";
+import { PaginatedResponse } from "@goauthentik/elements/table/Table";
+import { Table, TableColumn } from "@goauthentik/elements/table/Table";
 
 import { msg, str } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+
+import {
+    FlowStageBinding,
+    FlowsApi,
+    RbacPermissionsAssignedByUsersListModelEnum,
+} from "@goauthentik/api";
 
 @customElement("ak-bound-stages-list")
 export class BoundStagesList extends Table<FlowStageBinding> {
@@ -124,10 +123,7 @@ export class BoundStagesList extends Table<FlowStageBinding> {
                                 "These bindings control if this stage will be applied to the flow.",
                             )}
                         </p>
-                        <ak-bound-policies-list
-                            .target=${item.policybindingmodelPtrId}
-                            .policyEngineMode=${item.policyEngineMode}
-                        >
+                        <ak-bound-policies-list .target=${item.policybindingmodelPtrId}>
                         </ak-bound-policies-list>
                     </div>
                 </div>
@@ -136,13 +132,12 @@ export class BoundStagesList extends Table<FlowStageBinding> {
 
     renderEmpty(): TemplateResult {
         return super.renderEmpty(
-            html`<ak-empty-state icon="pf-icon-module">
-                <span>${msg("No Stages bound")}</span>
+            html`<ak-empty-state header=${msg("No Stages bound")} icon="pf-icon-module">
                 <div slot="body">${msg("No stages are currently bound to this flow.")}</div>
                 <div slot="primary">
                     <ak-stage-wizard
                         createText=${msg("Create and bind Stage")}
-                        showBindingPage
+                        ?showBindingPage=${true}
                         bindingTarget=${ifDefined(this.target)}
                     ></ak-stage-wizard>
                     <ak-forms-modal>
@@ -163,7 +158,7 @@ export class BoundStagesList extends Table<FlowStageBinding> {
         return html`
             <ak-stage-wizard
                 createText=${msg("Create and bind Stage")}
-                showBindingPage
+                ?showBindingPage=${true}
                 bindingTarget=${ifDefined(this.target)}
             ></ak-stage-wizard>
             <ak-forms-modal>

@@ -1,8 +1,6 @@
+import { useMDXModule } from "@goauthentik/elements/ak-mdx/MDXModuleContext";
 import { resolve } from "node:path";
-
-import { useMDXModule } from "#elements/ak-mdx/MDXModuleContext";
-
-import React from "react";
+import React, { memo } from "react";
 
 const DOCS_DOMAIN = "https://goauthentik.io";
 

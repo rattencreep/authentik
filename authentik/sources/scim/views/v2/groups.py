@@ -4,26 +4,19 @@ from uuid import uuid4
 
 from django.db.models import Q
 from django.db.transaction import atomic
-from django.http import QueryDict
+from django.http import Http404, QueryDict
 from django.urls import reverse
 from pydantic import ValidationError as PydanticValidationError
 from pydanticscim.group import GroupMember
 from rest_framework.exceptions import ValidationError
 from rest_framework.request import Request
 from rest_framework.response import Response
-from scim2_filter_parser.attr_paths import AttrPath
 
 from authentik.core.models import Group, User
-from authentik.providers.scim.clients.schema import SCIM_GROUP_SCHEMA, PatchOp, PatchOperation
+from authentik.providers.scim.clients.schema import SCIM_USER_SCHEMA
 from authentik.providers.scim.clients.schema import Group as SCIMGroupModel
 from authentik.sources.scim.models import SCIMSourceGroup
-from authentik.sources.scim.patch.processor import SCIMPatchProcessor
 from authentik.sources.scim.views.v2.base import SCIMObjectView
-from authentik.sources.scim.views.v2.exceptions import (
-    SCIMConflictError,
-    SCIMNotFoundError,
-    SCIMValidationError,
-)
 
 
 class GroupsView(SCIMObjectView):
@@ -34,14 +27,13 @@ class GroupsView(SCIMObjectView):
     def group_to_scim(self, scim_group: SCIMSourceGroup) -> dict:
         """Convert Group to SCIM data"""
         payload = SCIMGroupModel(
-            schemas=[SCIM_GROUP_SCHEMA],
+            schemas=[SCIM_USER_SCHEMA],
             id=str(scim_group.group.pk),
-            externalId=scim_group.external_id,
+            externalId=scim_group.id,
             displayName=scim_group.group.name,
             members=[],
             meta={
                 "resourceType": "Group",
-                "lastModified": scim_group.last_update,
                 "location": self.request.build_absolute_uri(
                     reverse(
                         "authentik_sources_scim:v2-groups",
@@ -56,11 +48,7 @@ class GroupsView(SCIMObjectView):
         for member in scim_group.group.users.order_by("pk"):
             member: User
             payload.members.append(GroupMember(value=str(member.uuid)))
-        final_payload = payload.model_dump(mode="json", exclude_unset=True)
-        final_payload.update(scim_group.attributes)
-        return self.remove_excluded_attributes(
-            SCIMGroupModel.model_validate(final_payload).model_dump(mode="json", exclude_unset=True)
-        )
+        return payload.model_dump(mode="json", exclude_unset=True)
 
     def get(self, request: Request, group_id: str | None = None, **kwargs) -> Response:
         """List Group handler"""
@@ -70,7 +58,7 @@ class GroupsView(SCIMObjectView):
         if group_id:
             connection = base_query.filter(source=self.source, group__group_uuid=group_id).first()
             if not connection:
-                raise SCIMNotFoundError("Group not found.")
+                raise Http404
             return Response(self.group_to_scim(connection))
         connections = (
             base_query.filter(source=self.source).order_by("pk").filter(self.filter_parse(request))
@@ -87,7 +75,7 @@ class GroupsView(SCIMObjectView):
         )
 
     @atomic
-    def update_group(self, connection: SCIMSourceGroup | None, data: QueryDict, apply_members=True):
+    def update_group(self, connection: SCIMSourceGroup | None, data: QueryDict):
         """Partial update a group"""
         properties = self.build_object_properties(data)
 
@@ -100,7 +88,7 @@ class GroupsView(SCIMObjectView):
 
         group.update_attributes(properties)
 
-        if "members" in data and apply_members:
+        if "members" in data:
             query = Q()
             for _member in data.get("members", []):
                 try:
@@ -111,18 +99,14 @@ class GroupsView(SCIMObjectView):
                 query |= Q(uuid=member.value)
             if query:
                 group.users.set(User.objects.filter(query))
-        data["members"] = self._convert_members(group)
         if not connection:
-            connection, _ = SCIMSourceGroup.objects.update_or_create(
-                external_id=data.get("externalId") or str(uuid4()),
+            connection, _ = SCIMSourceGroup.objects.get_or_create(
                 source=self.source,
                 group=group,
-                defaults={
-                    "attributes": data,
-                },
+                attributes=data,
+                id=data.get("externalId") or str(uuid4()),
             )
         else:
-            connection.external_id = data.get("externalId", connection.external_id)
             connection.attributes = data
             connection.save()
         return connection
@@ -135,7 +119,7 @@ class GroupsView(SCIMObjectView):
         ).first()
         if connection:
             self.logger.debug("Found existing group")
-            raise SCIMConflictError("Group with ID exists already.")
+            return Response(status=409)
         connection = self.update_group(None, request.data)
         return Response(self.group_to_scim(connection), status=201)
 
@@ -145,55 +129,8 @@ class GroupsView(SCIMObjectView):
             source=self.source, group__group_uuid=group_id
         ).first()
         if not connection:
-            raise SCIMNotFoundError("Group not found.")
+            raise Http404
         connection = self.update_group(connection, request.data)
-        return Response(self.group_to_scim(connection), status=200)
-
-    def _convert_members(self, group: Group):
-        users = []
-        for user in group.users.all().order_by("uuid"):
-            users.append({"value": str(user.uuid)})
-        return sorted(users, key=lambda u: u["value"])
-
-    @atomic
-    def patch(self, request: Request, group_id: str, **kwargs) -> Response:
-        """Patch group handler"""
-        connection = SCIMSourceGroup.objects.filter(
-            source=self.source, group__group_uuid=group_id
-        ).first()
-        if not connection:
-            raise SCIMNotFoundError("Group not found.")
-
-        for _op in request.data.get("Operations", []):
-            operation = PatchOperation.model_validate(_op)
-            if operation.op.lower() not in ["add", "remove", "replace"]:
-                raise SCIMValidationError()
-            attr_path = AttrPath(f'{operation.path} eq ""', {})
-            if attr_path.first_path == ("members", None, None):
-                # FIXME: this can probably be de-duplicated
-                if operation.op == PatchOp.add:
-                    if not isinstance(operation.value, list):
-                        operation.value = [operation.value]
-                    query = Q()
-                    for member in operation.value:
-                        query |= Q(uuid=member["value"])
-                    if query:
-                        connection.group.users.add(*User.objects.filter(query))
-                elif operation.op == PatchOp.remove:
-                    if not isinstance(operation.value, list):
-                        operation.value = [operation.value]
-                    query = Q()
-                    for member in operation.value:
-                        query |= Q(uuid=member["value"])
-                    if query:
-                        connection.group.users.remove(*User.objects.filter(query))
-        patcher = SCIMPatchProcessor()
-        patched_data = patcher.apply_patches(
-            connection.attributes, request.data.get("Operations", [])
-        )
-        patched_data["members"] = self._convert_members(connection.group)
-        if patched_data != connection.attributes:
-            self.update_group(connection, patched_data, apply_members=False)
         return Response(self.group_to_scim(connection), status=200)
 
     @atomic
@@ -203,7 +140,7 @@ class GroupsView(SCIMObjectView):
             source=self.source, group__group_uuid=group_id
         ).first()
         if not connection:
-            raise SCIMNotFoundError("Group not found.")
+            raise Http404
         connection.group.delete()
         connection.delete()
         return Response(status=204)

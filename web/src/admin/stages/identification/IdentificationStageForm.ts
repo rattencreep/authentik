@@ -1,17 +1,18 @@
-import "#admin/common/ak-flow-search/ak-flow-search";
-import "#components/ak-switch-input";
-import "#elements/ak-checkbox-group/ak-checkbox-group";
-import "#elements/ak-dual-select/ak-dual-select-dynamic-selected-provider";
-import "#elements/forms/FormGroup";
-import "#elements/forms/HorizontalFormElement";
-import "#elements/forms/SearchSelect/index";
+import "@goauthentik/admin/common/ak-flow-search/ak-flow-search";
+import { BaseStageForm } from "@goauthentik/admin/stages/BaseStageForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { groupBy } from "@goauthentik/common/utils";
+import "@goauthentik/components/ak-switch-input.js";
+import "@goauthentik/elements/ak-checkbox-group/ak-checkbox-group.js";
+import "@goauthentik/elements/ak-dual-select/ak-dual-select-dynamic-selected-provider.js";
+import "@goauthentik/elements/forms/FormGroup";
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import "@goauthentik/elements/forms/SearchSelect";
 
-import { sourcesProvider, sourcesSelector } from "./IdentificationStageFormHelpers.js";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-import { groupBy } from "#common/utils";
-
-import { BaseStageForm } from "#admin/stages/BaseStageForm";
+import { msg } from "@lit/localize";
+import { TemplateResult, css, html } from "lit";
+import { customElement } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 import {
     FlowsInstancesListDesignationEnum,
@@ -23,21 +24,20 @@ import {
     UserFieldsEnum,
 } from "@goauthentik/api";
 
-import { msg } from "@lit/localize";
-import { css, html, TemplateResult } from "lit";
-import { customElement } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
+import { sourcesProvider, sourcesSelector } from "./IdentificationStageFormHelpers.js";
 
 @customElement("ak-stage-identification-form")
 export class IdentificationStageForm extends BaseStageForm<IdentificationStage> {
-    static styles = [
-        ...super.styles,
-        css`
-            ak-checkbox-group::part(checkbox-group) {
-                padding-top: var(--pf-c-form--m-horizontal__group-label--md--PaddingTop);
-            }
-        `,
-    ];
+    static get styles() {
+        return [
+            ...super.styles,
+            css`
+                ak-checkbox-group::part(checkbox-group) {
+                    padding-top: var(--pf-c-form--m-horizontal__group-label--md--PaddingTop);
+                }
+            `,
+        ];
+    }
 
     loadInstance(pk: string): Promise<IdentificationStage> {
         return new StagesApi(DEFAULT_CONFIG).stagesIdentificationRetrieve({
@@ -76,7 +76,7 @@ export class IdentificationStageForm extends BaseStageForm<IdentificationStage> 
         return html`<span>
                 ${msg("Let the user identify themselves with their username or Email address.")}
             </span>
-            <ak-form-element-horizontal label=${msg("Name")} required name="name">
+            <ak-form-element-horizontal label=${msg("Name")} ?required=${true} name="name">
                 <input
                     type="text"
                     value="${ifDefined(this.instance?.name || "")}"
@@ -84,7 +84,7 @@ export class IdentificationStageForm extends BaseStageForm<IdentificationStage> 
                     required
                 />
             </ak-form-element-horizontal>
-            <ak-form-group expanded>
+            <ak-form-group .expanded=${true}>
                 <span slot="header"> ${msg("Stage-specific settings")} </span>
                 <div slot="body" class="pf-c-form">
                     <ak-form-element-horizontal label=${msg("User fields")} name="userFields">
@@ -196,7 +196,11 @@ export class IdentificationStageForm extends BaseStageForm<IdentificationStage> 
             <ak-form-group>
                 <span slot="header"> ${msg("Source settings")} </span>
                 <div slot="body" class="pf-c-form">
-                    <ak-form-element-horizontal label=${msg("Sources")} required name="sources">
+                    <ak-form-element-horizontal
+                        label=${msg("Sources")}
+                        ?required=${true}
+                        name="sources"
+                    >
                         <ak-dual-select-dynamic-selected
                             .provider=${sourcesProvider}
                             .selector=${sourcesSelector(this.instance?.sources)}

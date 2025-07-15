@@ -1,13 +1,12 @@
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { PaginatedResponse, TableColumn } from "#elements/table/Table";
-import { TableModal } from "#elements/table/TableModal";
-
-import { Application, Endpoint, RacApi } from "@goauthentik/api";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { PaginatedResponse, TableColumn } from "@goauthentik/elements/table/Table";
+import { TableModal } from "@goauthentik/elements/table/TableModal";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
+
+import { Application, Endpoint, RacApi } from "@goauthentik/api";
 
 @customElement("ak-library-rac-endpoint-launch")
 export class RACLaunchEndpointModal extends TableModal<Endpoint> {

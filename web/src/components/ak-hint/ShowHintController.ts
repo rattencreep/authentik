@@ -1,7 +1,7 @@
-import { LOCALSTORAGE_AUTHENTIK_KEY } from "#common/constants";
+import { LOCALSTORAGE_AUTHENTIK_KEY } from "@goauthentik/common/constants";
 
 import { msg } from "@lit/localize";
-import { html, LitElement, ReactiveController, ReactiveControllerHost } from "lit";
+import { LitElement, ReactiveController, ReactiveControllerHost, html } from "lit";
 
 type ReactiveLitElement = LitElement & ReactiveControllerHost;
 

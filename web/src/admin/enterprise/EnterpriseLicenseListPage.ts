@@ -1,19 +1,28 @@
-import "#admin/enterprise/EnterpriseLicenseForm";
-import "#admin/enterprise/EnterpriseStatusCard";
-import "#admin/rbac/ObjectPermissionModal";
-import "#elements/Spinner";
-import "#elements/buttons/SpinnerButton/index";
-import "#elements/cards/AggregateCard";
-import "#elements/forms/DeleteBulkForm";
-import "#elements/forms/ModalForm";
+import "@goauthentik/admin/enterprise/EnterpriseLicenseForm";
+import "@goauthentik/admin/enterprise/EnterpriseStatusCard";
+import "@goauthentik/admin/rbac/ObjectPermissionModal";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { formatElapsedTime } from "@goauthentik/common/temporal";
+import { PFColor } from "@goauthentik/elements/Label";
+import "@goauthentik/elements/Spinner";
+import "@goauthentik/elements/buttons/SpinnerButton";
+import "@goauthentik/elements/cards/AggregateCard";
+import "@goauthentik/elements/forms/DeleteBulkForm";
+import "@goauthentik/elements/forms/ModalForm";
+import { PaginatedResponse } from "@goauthentik/elements/table/Table";
+import { TableColumn } from "@goauthentik/elements/table/Table";
+import { TablePage } from "@goauthentik/elements/table/TablePage";
 import "@patternfly/elements/pf-tooltip/pf-tooltip.js";
 
-import { DEFAULT_CONFIG } from "#common/api/config";
-import { formatElapsedTime } from "#common/temporal";
+import { msg, str } from "@lit/localize";
+import { CSSResult, TemplateResult, css, html } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 
-import { PFColor } from "#elements/Label";
-import { PaginatedResponse, TableColumn } from "#elements/table/Table";
-import { TablePage } from "#elements/table/TablePage";
+import PFBanner from "@patternfly/patternfly/components/Banner/banner.css";
+import PFButton from "@patternfly/patternfly/components/Button/button.css";
+import PFCard from "@patternfly/patternfly/components/Card/card.css";
+import PFFormControl from "@patternfly/patternfly/components/FormControl/form-control.css";
+import PFGrid from "@patternfly/patternfly/layouts/Grid/grid.css";
 
 import {
     EnterpriseApi,
@@ -23,16 +32,6 @@ import {
     LicenseSummaryStatusEnum,
     RbacPermissionsAssignedByUsersListModelEnum,
 } from "@goauthentik/api";
-
-import { msg, str } from "@lit/localize";
-import { css, CSSResult, html, TemplateResult } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-
-import PFBanner from "@patternfly/patternfly/components/Banner/banner.css";
-import PFButton from "@patternfly/patternfly/components/Button/button.css";
-import PFCard from "@patternfly/patternfly/components/Card/card.css";
-import PFFormControl from "@patternfly/patternfly/components/FormControl/form-control.css";
-import PFGrid from "@patternfly/patternfly/layouts/Grid/grid.css";
 
 @customElement("ak-enterprise-license-list")
 export class EnterpriseLicenseListPage extends TablePage<License> {
@@ -64,22 +63,23 @@ export class EnterpriseLicenseListPage extends TablePage<License> {
     @state()
     installID?: string;
 
-    static styles: CSSResult[] = [
-        ...super.styles,
-        PFGrid,
-        PFBanner,
-        PFFormControl,
-        PFButton,
-        PFCard,
-        css`
-            .pf-m-no-padding-bottom {
-                padding-bottom: 0;
-            }
-            .install-id {
-                word-break: break-all;
-            }
-        `,
-    ];
+    static get styles(): CSSResult[] {
+        return super.styles.concat(
+            PFGrid,
+            PFBanner,
+            PFFormControl,
+            PFButton,
+            PFCard,
+            css`
+                .pf-m-no-padding-bottom {
+                    padding-bottom: 0;
+                }
+                .install-id {
+                    word-break: break-all;
+                }
+            `,
+        );
+    }
 
     async apiEndpoint(): Promise<PaginatedResponse<License>> {
         this.forecast = await new EnterpriseApi(DEFAULT_CONFIG).enterpriseLicenseForecastRetrieve();
@@ -109,8 +109,10 @@ export class EnterpriseLicenseListPage extends TablePage<License> {
         return super.renderEmpty(html`
             ${inner
                 ? inner
-                : html`<ak-empty-state icon=${this.pageIcon()}
-                      ><span>${msg("No licenses found.")}</span>
+                : html`<ak-empty-state
+                      icon=${this.pageIcon()}
+                      header="${msg("No licenses found.")}"
+                  >
                       <div slot="body">
                           ${this.searchEnabled() ? this.renderEmptyClearSearch() : html``}
                       </div>

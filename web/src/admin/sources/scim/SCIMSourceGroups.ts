@@ -1,12 +1,11 @@
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { PaginatedResponse, Table, TableColumn } from "#elements/table/Table";
-
-import { SCIMSourceGroup, SourcesApi } from "@goauthentik/api";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { PaginatedResponse, Table, TableColumn } from "@goauthentik/elements/table/Table";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
+
+import { SCIMSourceGroup, SourcesApi } from "@goauthentik/api";
 
 @customElement("ak-source-scim-groups-list")
 export class SCIMSourceGroupList extends Table<SCIMSourceGroup> {
@@ -42,7 +41,7 @@ export class SCIMSourceGroupList extends Table<SCIMSourceGroup> {
             html`<a href="#/identity/groups/${item.groupObj.pk}">
                 <div>${item.groupObj.name}</div>
             </a>`,
-            html`${item.externalId}`,
+            html`${item.id}`,
         ];
     }
 }

@@ -1,8 +1,9 @@
-import FlowSearch from "./FlowSearch.js";
+import { customElement } from "lit/decorators.js";
+import { property } from "lit/decorators.js";
 
 import type { Flow } from "@goauthentik/api";
 
-import { customElement, property } from "lit/decorators.js";
+import FlowSearch from "./FlowSearch";
 
 /**
  * Search for flows that connect to user sources

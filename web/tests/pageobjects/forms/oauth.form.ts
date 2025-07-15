@@ -1,6 +1,6 @@
-import Page from "../page.js";
-
 import { $ } from "@wdio/globals";
+
+import Page from "../page.js";
 
 export class OauthForm extends Page {
     async setAuthorizationFlow(selector: string) {

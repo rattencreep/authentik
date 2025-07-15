@@ -1,4 +1,4 @@
-import { ActionButton } from "./ak-action-button.js";
+import { ActionButton } from "./ak-action-button";
 
 export { ActionButton };
 export default ActionButton;

@@ -1,11 +1,10 @@
-import "#elements/messages/MessageContainer";
-import "../ak-status-label.js";
-
-import AkStatusLabel from "../ak-status-label.js";
-
+import "@goauthentik/elements/messages/MessageContainer";
 import { Meta } from "@storybook/web-components";
 
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
+
+import "../ak-status-label";
+import AkStatusLabel from "../ak-status-label";
 
 const metadata: Meta<AkStatusLabel> = {
     title: "Components / App Status Label",
@@ -49,7 +48,7 @@ export const AppIcon = () => {
            </dd>
             <dt>Programmatically Good</dt><dd>
 
-                <ak-status-label good></ak-status-label>
+                <ak-status-label ?good=${true}></ak-status-label>
 
            </dd>
             <dt>Programmatically Bad</dt><dd>

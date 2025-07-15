@@ -1,15 +1,13 @@
-import { renderForm } from "./OAuth2ProviderFormForm.js";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { DualSelectPair } from "#elements/ak-dual-select/types";
-
-import { BaseProviderForm } from "#admin/providers/BaseProviderForm";
-
-import { ClientTypeEnum, OAuth2Provider, ProvidersApi } from "@goauthentik/api";
+import { BaseProviderForm } from "@goauthentik/admin/providers/BaseProviderForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { DualSelectPair } from "@goauthentik/elements/ak-dual-select/types";
 
 import { css } from "lit";
 import { customElement, state } from "lit/decorators.js";
+
+import { ClientTypeEnum, OAuth2Provider, ProvidersApi } from "@goauthentik/api";
+
+import { renderForm } from "./OAuth2ProviderFormForm.js";
 
 const providerToSelect = (provider: OAuth2Provider) => [provider.pk, provider.name];
 
@@ -62,14 +60,13 @@ export class OAuth2ProviderFormPage extends BaseProviderForm<OAuth2Provider> {
     @state()
     showClientSecret = true;
 
-    static styles = [
-        ...super.styles,
-        css`
+    static get styles() {
+        return super.styles.concat(css`
             ak-array-input {
                 width: 100%;
             }
-        `,
-    ];
+        `);
+    }
 
     async loadInstance(pk: number): Promise<OAuth2Provider> {
         const provider = await new ProvidersApi(DEFAULT_CONFIG).providersOauth2Retrieve({

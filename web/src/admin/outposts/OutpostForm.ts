@@ -1,35 +1,32 @@
-import "#elements/CodeMirror";
-import "#elements/ak-dual-select/ak-dual-select-provider";
-import "#elements/forms/FormGroup";
-import "#elements/forms/HorizontalFormElement";
-import "#elements/forms/SearchSelect/index";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { docLink } from "@goauthentik/common/global";
+import { groupBy } from "@goauthentik/common/utils";
+import "@goauthentik/elements/CodeMirror";
+import { CodeMirrorMode } from "@goauthentik/elements/CodeMirror";
+import "@goauthentik/elements/ak-dual-select/ak-dual-select-provider";
+import { DataProvider, DualSelectPair } from "@goauthentik/elements/ak-dual-select/types";
+import "@goauthentik/elements/forms/FormGroup";
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import { ModelForm } from "@goauthentik/elements/forms/ModelForm";
+import "@goauthentik/elements/forms/SearchSelect";
+import { PaginatedResponse } from "@goauthentik/elements/table/Table";
+import YAML from "yaml";
 
-import { DEFAULT_CONFIG } from "#common/api/config";
-import { docLink } from "#common/global";
-import { groupBy } from "#common/utils";
-
-import { DataProvider, DualSelectPair } from "#elements/ak-dual-select/types";
-import { CodeMirrorMode } from "#elements/CodeMirror";
-import { ModelForm } from "#elements/forms/ModelForm";
-import { PaginatedResponse } from "#elements/table/Table";
+import { msg } from "@lit/localize";
+import { TemplateResult, html } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { map } from "lit/directives/map.js";
 
 import {
     Outpost,
     OutpostDefaultConfig,
+    OutpostTypeEnum,
     OutpostsApi,
     OutpostsServiceConnectionsAllListRequest,
-    OutpostTypeEnum,
     ProvidersApi,
     ServiceConnection,
 } from "@goauthentik/api";
-
-import YAML from "yaml";
-
-import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
-import { map } from "lit/directives/map.js";
 
 interface ProviderBase {
     pk: number;
@@ -146,7 +143,7 @@ export class OutpostForm extends ModelForm<Outpost, string> {
             [OutpostTypeEnum.Rac, msg("RAC")],
         ];
 
-        return html` <ak-form-element-horizontal label=${msg("Name")} required name="name">
+        return html` <ak-form-element-horizontal label=${msg("Name")} ?required=${true} name="name">
                 <input
                     type="text"
                     value="${ifDefined(this.instance?.name)}"
@@ -154,7 +151,7 @@ export class OutpostForm extends ModelForm<Outpost, string> {
                     required
                 />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label=${msg("Type")} required name="type">
+            <ak-form-element-horizontal label=${msg("Type")} ?required=${true} name="type">
                 <select
                     class="pf-c-form-control"
                     @change=${(ev: Event) => {
@@ -205,7 +202,7 @@ export class OutpostForm extends ModelForm<Outpost, string> {
                         }
                         return selected;
                     }}
-                    blankable
+                    ?blankable=${true}
                 >
                 </ak-search-select>
                 <p class="pf-c-form__helper-text">

@@ -1,10 +1,9 @@
-import { EVENT_REFRESH } from "#common/constants";
-
-import { AKElement } from "#elements/Base";
-import { setURLParams } from "#elements/router/RouteMatch";
+import { EVENT_REFRESH } from "@goauthentik/common/constants";
+import { AKElement } from "@goauthentik/elements/Base";
+import { setURLParams } from "@goauthentik/elements/router/RouteMatch";
 
 import { msg } from "@lit/localize";
-import { CSSResult, html, TemplateResult } from "lit";
+import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
 import PFTreeView from "@patternfly/patternfly/components/TreeView/tree-view.css";
@@ -140,7 +139,9 @@ export class TreeViewNode extends AKElement {
 
 @customElement("ak-treeview")
 export class TreeView extends AKElement {
-    static styles: CSSResult[] = [PFBase, PFTreeView];
+    static get styles(): CSSResult[] {
+        return [PFBase, PFTreeView];
+    }
 
     @property({ type: Array })
     items: string[] = [];
@@ -198,7 +199,7 @@ export class TreeView extends AKElement {
                 <ak-treeview-node
                     .item=${rootItem}
                     activePath=${this.activePath}
-                    open
+                    ?open=${true}
                     separator=${this.separator}
                     .host=${this}
                 ></ak-treeview-node>

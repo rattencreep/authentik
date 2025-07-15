@@ -1,8 +1,7 @@
-import { ERROR_CLASS, PROGRESS_CLASS, SUCCESS_CLASS } from "#common/constants";
-import { PFSize } from "#common/enums";
-
-import { AKElement } from "#elements/Base";
-import { CustomEmitterElement } from "#elements/utils/eventEmitter";
+import { ERROR_CLASS, PROGRESS_CLASS, SUCCESS_CLASS } from "@goauthentik/common/constants";
+import { PFSize } from "@goauthentik/common/enums.js";
+import { AKElement } from "@goauthentik/elements/Base";
+import { CustomEmitterElement } from "@goauthentik/elements/utils/eventEmitter";
 
 import { Task, TaskStatus } from "@lit/task";
 import { css, html } from "lit";
@@ -51,7 +50,9 @@ const SPINNER_TIMEOUT = 1000 * 1.5; // milliseconds
 export abstract class BaseTaskButton extends CustomEmitterElement(AKElement) {
     eventPrefix = "ak-button";
 
-    static styles = [...buttonStyles];
+    static get styles() {
+        return buttonStyles;
+    }
 
     callAction!: () => Promise<unknown>;
 

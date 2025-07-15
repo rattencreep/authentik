@@ -1,20 +1,19 @@
-import "#components/ak-status-label";
-import "#elements/chips/Chip";
-import "#elements/chips/ChipGroup";
-import "#elements/forms/DeleteBulkForm";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-import { formatElapsedTime } from "#common/temporal";
-
-import { PaginatedResponse, Table, TableColumn } from "#elements/table/Table";
-
-import { ExpiringBaseGrantModel, Oauth2Api, TokenModel } from "@goauthentik/api";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { formatElapsedTime } from "@goauthentik/common/temporal";
+import "@goauthentik/components/ak-status-label";
+import "@goauthentik/elements/chips/Chip";
+import "@goauthentik/elements/chips/ChipGroup";
+import "@goauthentik/elements/forms/DeleteBulkForm";
+import { PaginatedResponse } from "@goauthentik/elements/table/Table";
+import { Table, TableColumn } from "@goauthentik/elements/table/Table";
 
 import { msg } from "@lit/localize";
-import { CSSResult, html, TemplateResult } from "lit";
+import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 import PFFlex from "@patternfly/patternfly/layouts/Flex/flex.css";
+
+import { ExpiringBaseGrantModel, Oauth2Api, TokenModel } from "@goauthentik/api";
 
 @customElement("ak-user-oauth-access-token-list")
 export class UserOAuthAccessTokenList extends Table<TokenModel> {
@@ -23,7 +22,9 @@ export class UserOAuthAccessTokenList extends Table<TokenModel> {
     @property({ type: Number })
     userId?: number;
 
-    static styles: CSSResult[] = [...super.styles, PFFlex];
+    static get styles(): CSSResult[] {
+        return super.styles.concat(PFFlex);
+    }
 
     async apiEndpoint(): Promise<PaginatedResponse<TokenModel>> {
         return new Oauth2Api(DEFAULT_CONFIG).oauth2AccessTokensList({
@@ -96,7 +97,7 @@ export class UserOAuthAccessTokenList extends Table<TokenModel> {
                 : msg("-")}`,
             html`<ak-chip-group>
                 ${item.scope.sort().map((scope) => {
-                    return html`<ak-chip>${scope}</ak-chip>`;
+                    return html`<ak-chip .removable=${false}>${scope}</ak-chip>`;
                 })}
             </ak-chip-group>`,
         ];

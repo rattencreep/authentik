@@ -1,19 +1,17 @@
-import "#components/ak-status-label";
-import "#elements/events/LogViewer";
-import "#elements/forms/HorizontalFormElement";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-import { SentryIgnoredError } from "#common/sentry/index";
-
-import { Form } from "#elements/forms/Form";
-
-import { Flow, FlowImportResult, FlowsApi } from "@goauthentik/api";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { SentryIgnoredError } from "@goauthentik/common/sentry";
+import "@goauthentik/components/ak-status-label";
+import "@goauthentik/elements/events/LogViewer";
+import { Form } from "@goauthentik/elements/forms/Form";
+import "@goauthentik/elements/forms/HorizontalFormElement";
 
 import { msg } from "@lit/localize";
-import { CSSResult, html, TemplateResult } from "lit";
+import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
 import PFDescriptionList from "@patternfly/patternfly/components/DescriptionList/description-list.css";
+
+import { Flow, FlowImportResult, FlowsApi } from "@goauthentik/api";
 
 @customElement("ak-flow-import-form")
 export class FlowImportForm extends Form<Flow> {
@@ -24,10 +22,12 @@ export class FlowImportForm extends Form<Flow> {
         return msg("Successfully imported flow.");
     }
 
-    static styles: CSSResult[] = [...super.styles, PFDescriptionList];
+    static get styles(): CSSResult[] {
+        return super.styles.concat(PFDescriptionList);
+    }
 
     async send(): Promise<FlowImportResult> {
-        const file = this.files().get("flow");
+        const file = this.getFormFiles().flow;
         if (!file) {
             throw new SentryIgnoredError("No form data");
         }

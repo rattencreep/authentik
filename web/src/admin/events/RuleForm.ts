@@ -1,14 +1,15 @@
-import "#elements/ak-dual-select/ak-dual-select-dynamic-selected-provider";
-import "#elements/forms/HorizontalFormElement";
-import "#elements/forms/Radio";
-import "#elements/forms/SearchSelect/index";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { severityToLabel } from "@goauthentik/common/labels";
+import "@goauthentik/elements/ak-dual-select/ak-dual-select-dynamic-selected-provider.js";
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import { ModelForm } from "@goauthentik/elements/forms/ModelForm";
+import "@goauthentik/elements/forms/Radio";
+import "@goauthentik/elements/forms/SearchSelect";
 
-import { eventTransportsProvider, eventTransportsSelector } from "./RuleFormHelpers.js";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-import { severityToLabel } from "#common/labels";
-
-import { ModelForm } from "#elements/forms/ModelForm";
+import { msg } from "@lit/localize";
+import { TemplateResult, html } from "lit";
+import { customElement } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 import {
     CoreApi,
@@ -20,10 +21,7 @@ import {
     SeverityEnum,
 } from "@goauthentik/api";
 
-import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
-import { customElement } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
+import { eventTransportsProvider, eventTransportsSelector } from "./RuleFormHelpers.js";
 
 @customElement("ak-event-rule-form")
 export class RuleForm extends ModelForm<NotificationRule, string> {
@@ -60,7 +58,7 @@ export class RuleForm extends ModelForm<NotificationRule, string> {
     }
 
     renderForm(): TemplateResult {
-        return html` <ak-form-element-horizontal label=${msg("Name")} required name="name">
+        return html` <ak-form-element-horizontal label=${msg("Name")} ?required=${true} name="name">
                 <input
                     type="text"
                     value="${ifDefined(this.instance?.name)}"
@@ -68,7 +66,7 @@ export class RuleForm extends ModelForm<NotificationRule, string> {
                     required
                 />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label=${msg("Group")} name="destinationGroup">
+            <ak-form-element-horizontal label=${msg("Group")} name="group">
                 <ak-search-select
                     .fetchObjects=${async (query?: string): Promise<Group[]> => {
                         const args: CoreGroupsListRequest = {
@@ -88,48 +86,22 @@ export class RuleForm extends ModelForm<NotificationRule, string> {
                         return group?.pk;
                     }}
                     .selected=${(group: Group): boolean => {
-                        return group.pk === this.instance?.destinationGroup;
+                        return group.pk === this.instance?.group;
                     }}
-                    blankable
+                    ?blankable=${true}
                 >
                 </ak-search-select>
                 <p class="pf-c-form__helper-text">
-                    ${msg("Select the group of users which the alerts are sent to. ")}
-                </p>
-                <p class="pf-c-form__helper-text">
                     ${msg(
-                        "If no group is selected and 'Send notification to event user' is disabled the rule is disabled. ",
+                        "Select the group of users which the alerts are sent to. If no group is selected the rule is disabled.",
                     )}
                 </p>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal name="destinationEventUser">
-                <label class="pf-c-switch">
-                    <input
-                        class="pf-c-switch__input"
-                        type="checkbox"
-                        ?checked=${this.instance?.destinationEventUser ?? false}
-                    />
-                    <span class="pf-c-switch__toggle">
-                        <span class="pf-c-switch__toggle-icon">
-                            <i class="fas fa-check" aria-hidden="true"></i>
-                        </span>
-                    </span>
-                    <span class="pf-c-switch__label"
-                        >${msg("Send notification to event user")}</span
-                    >
-                </label>
-                <p class="pf-c-form__helper-text">
-                    ${msg(
-                        "When enabled, notification will be sent to the user that triggered the event in addition to any users in the group above. The event user will always be the first user, to send a notification only to the event user enabled 'Send once' in the notification transport.",
-                    )}
-                </p>
-                <p class="pf-c-form__helper-text">
-                    ${msg(
-                        "If no group is selected and 'Send notification to event user' is disabled the rule is disabled. ",
-                    )}
-                </p>
-            </ak-form-element-horizontal>
-            <ak-form-element-horizontal label=${msg("Transports")} required name="transports">
+            <ak-form-element-horizontal
+                label=${msg("Transports")}
+                ?required=${true}
+                name="transports"
+            >
                 <ak-dual-select-dynamic-selected
                     .provider=${eventTransportsProvider}
                     .selector=${eventTransportsSelector(this.instance?.transports)}
@@ -142,7 +114,7 @@ export class RuleForm extends ModelForm<NotificationRule, string> {
                     )}
                 </p>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label=${msg("Severity")} required name="severity">
+            <ak-form-element-horizontal label=${msg("Severity")} ?required=${true} name="severity">
                 <ak-radio
                     .options=${[
                         {

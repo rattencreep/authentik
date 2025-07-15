@@ -1,12 +1,11 @@
-import "#elements/forms/HorizontalFormElement";
+import { AkControlElement } from "@goauthentik/elements/AkControlElement.js";
+import "@goauthentik/elements/forms/HorizontalFormElement";
 
-import { AkControlElement } from "#elements/AkControlElement";
-
-import { css, html, nothing, TemplateResult } from "lit";
+import { TemplateResult, css, html, nothing } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { map } from "lit/directives/map.js";
-import { createRef, ref, Ref } from "lit/directives/ref.js";
+import { Ref, createRef, ref } from "lit/directives/ref.js";
 
 import PFForm from "@patternfly/patternfly/components/Form/form.css";
 import PFFormControl from "@patternfly/patternfly/components/FormControl/form-control.css";
@@ -27,7 +26,9 @@ const selectStyles = css`
  */
 @customElement("ak-multi-select")
 export class AkMultiSelect extends AkControlElement {
-    static styles = [PFBase, PFForm, PFFormControl, selectStyles];
+    static get styles() {
+        return [PFBase, PFForm, PFFormControl, selectStyles];
+    }
 
     /**
      * The [name] attribute, which is also distributed to the layout manager and the input control.

@@ -1,22 +1,24 @@
-import "#admin/common/ak-crypto-certificate-search";
-import "#admin/common/ak-flow-search/ak-flow-search";
-import "#components/ak-toggle-group";
-import "#elements/ak-dual-select/ak-dual-select-dynamic-selected-provider";
-import "#elements/forms/FormGroup";
-import "#elements/forms/HorizontalFormElement";
-import "#elements/forms/SearchSelect/index";
-import "#elements/utils/TimeDeltaHelp";
-
-import { propertyMappingsProvider, propertyMappingsSelector } from "./ProxyProviderFormHelpers.js";
-
+import "@goauthentik/admin/common/ak-crypto-certificate-search";
+import "@goauthentik/admin/common/ak-flow-search/ak-flow-search";
 import {
     oauth2ProviderSelector,
     oauth2ProvidersProvider,
-} from "#admin/providers/oauth2/OAuth2ProviderForm";
+} from "@goauthentik/admin/providers/oauth2/OAuth2ProviderForm";
 import {
     oauth2SourcesProvider,
     oauth2SourcesSelector,
-} from "#admin/providers/oauth2/OAuth2Sources";
+} from "@goauthentik/admin/providers/oauth2/OAuth2Sources.js";
+import "@goauthentik/components/ak-toggle-group";
+import "@goauthentik/elements/ak-dual-select/ak-dual-select-dynamic-selected-provider.js";
+import "@goauthentik/elements/forms/FormGroup";
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import "@goauthentik/elements/forms/SearchSelect";
+import "@goauthentik/elements/utils/TimeDeltaHelp";
+import { match } from "ts-pattern";
+
+import { msg } from "@lit/localize";
+import { html, nothing } from "lit";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 import {
     FlowsInstancesListDesignationEnum,
@@ -25,11 +27,7 @@ import {
     ValidationError,
 } from "@goauthentik/api";
 
-import { match } from "ts-pattern";
-
-import { msg } from "@lit/localize";
-import { html, nothing } from "lit";
-import { ifDefined } from "lit/directives/if-defined.js";
+import { propertyMappingsProvider, propertyMappingsSelector } from "./ProxyProviderFormHelpers.js";
 
 export type ProxyModeValue = { value: ProxyMode };
 export type SetMode = (ev: CustomEvent<ProxyModeValue>) => void;
@@ -50,7 +48,7 @@ function renderHttpBasic(provider: Partial<ProxyProvider>) {
             help=${msg(
                 "User/Group Attribute used for the user part of the HTTP-Basic Header. If not set, the user's Email address is used.",
             )}
-            input-hint="code"
+            inputHint="code"
         >
         </ak-text-input>
 
@@ -59,7 +57,7 @@ function renderHttpBasic(provider: Partial<ProxyProvider>) {
             label=${msg("HTTP-Basic Password Key")}
             value="${ifDefined(provider?.basicAuthPasswordAttribute)}"
             help=${msg("User/Group Attribute used for the password part of the HTTP-Basic Header.")}
-            input-hint="code"
+            inputHint="code"
         >
         </ak-text-input>`;
 }
@@ -92,7 +90,7 @@ function renderProxySettings(provider: Partial<ProxyProvider>, errors?: Validati
             help=${msg(
                 "The external URL you'll access the application at. Include any non-standard port.",
             )}
-            input-hint="code"
+            inputHint="code"
         ></ak-text-input>
         <ak-text-input
             name="internalHost"
@@ -101,7 +99,7 @@ function renderProxySettings(provider: Partial<ProxyProvider>, errors?: Validati
             required
             .errorMessages=${errors?.internalHost ?? []}
             help=${msg("Upstream host that the requests are forwarded to.")}
-            input-hint="code"
+            inputHint="code"
         ></ak-text-input>
 
         <ak-switch-input
@@ -128,7 +126,7 @@ function renderForwardSingleSettings(provider: Partial<ProxyProvider>, errors?: 
             help=${msg(
                 "The external URL you'll access the application at. Include any non-standard port.",
             )}
-            input-hint="code"
+            inputHint="code"
         ></ak-text-input>`;
 }
 
@@ -227,7 +225,7 @@ export function renderForm(
             .errorMessages=${errors?.accessTokenValidity ?? []}
             required
             .help=${msg("Configure how long tokens are valid for.")}
-            input-hint="code"
+            inputHint="code"
         ></ak-text-input>
 
         <ak-form-group>

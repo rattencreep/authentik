@@ -1,21 +1,18 @@
-import "#elements/router/Router404";
-
-import { ROUTE_SEPARATOR } from "#common/constants";
-
-import { AKElement } from "#elements/Base";
-import { Route } from "#elements/router/Route";
-import { RouteMatch } from "#elements/router/RouteMatch";
-
+import { ROUTE_SEPARATOR } from "@goauthentik/common/constants";
+import { AKElement } from "@goauthentik/elements/Base";
+import { Route } from "@goauthentik/elements/router/Route";
+import { RouteMatch } from "@goauthentik/elements/router/RouteMatch";
+import "@goauthentik/elements/router/Router404";
 import {
     BrowserClient,
-    getClient,
     SEMANTIC_ATTRIBUTE_SENTRY_SOURCE,
     Span,
+    getClient,
     startBrowserTracingNavigationSpan,
     startBrowserTracingPageLoadSpan,
 } from "@sentry/browser";
 
-import { css, CSSResult, html, PropertyValues, TemplateResult } from "lit";
+import { CSSResult, PropertyValues, TemplateResult, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 // Poliyfill for hashchange.newURL,
@@ -67,16 +64,18 @@ export class RouterOutlet extends AKElement {
     private sentryClient?: BrowserClient;
     private pageLoadSpan?: Span;
 
-    static styles: CSSResult[] = [
-        css`
-            :host {
-                background-color: transparent !important;
-            }
-            *:first-child {
-                flex-direction: column;
-            }
-        `,
-    ];
+    static get styles(): CSSResult[] {
+        return [
+            css`
+                :host {
+                    background-color: transparent !important;
+                }
+                *:first-child {
+                    flex-direction: column;
+                }
+            `,
+        ];
+    }
 
     constructor() {
         super();

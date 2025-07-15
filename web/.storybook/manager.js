@@ -3,9 +3,7 @@
  *
  * @import { ThemeVarsPartial } from "storybook/internal/theming";
  */
-
 import { createUIThemeEffect, resolveUITheme } from "@goauthentik/web/common/theme.ts";
-
 import { addons } from "@storybook/manager-api";
 import { create } from "@storybook/theming/create";
 

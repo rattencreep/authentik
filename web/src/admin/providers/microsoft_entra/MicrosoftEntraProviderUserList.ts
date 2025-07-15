@@ -1,10 +1,12 @@
-import "#elements/forms/DeleteBulkForm";
-import "#elements/forms/ModalForm";
-import "#elements/sync/SyncObjectForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/elements/forms/DeleteBulkForm";
+import "@goauthentik/elements/forms/ModalForm";
+import "@goauthentik/elements/sync/SyncObjectForm";
+import { PaginatedResponse, Table, TableColumn } from "@goauthentik/elements/table/Table";
 
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { PaginatedResponse, Table, TableColumn } from "#elements/table/Table";
+import { msg } from "@lit/localize";
+import { TemplateResult, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
 
 import {
     MicrosoftEntraProviderUser,
@@ -12,10 +14,6 @@ import {
     ProvidersMicrosoftEntraSyncObjectCreateRequest,
     SyncObjectModelEnum,
 } from "@goauthentik/api";
-
-import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
-import { customElement, property } from "lit/decorators.js";
 
 @customElement("ak-provider-microsoft-entra-users-list")
 export class MicrosoftEntraProviderUserList extends Table<MicrosoftEntraProviderUser> {

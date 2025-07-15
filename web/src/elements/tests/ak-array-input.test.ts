@@ -1,13 +1,12 @@
-import "#admin/admin-settings/AdminSettingsFooterLinks";
-import "../ak-array-input.js";
-
-import { render } from "#elements/tests/utils";
-
-import { FooterLink } from "@goauthentik/api";
-
+import "@goauthentik/admin/admin-settings/AdminSettingsFooterLinks.js";
+import { render } from "@goauthentik/elements/tests/utils.js";
 import { $, expect } from "@wdio/globals";
 
 import { html } from "lit";
+
+import { FooterLink } from "@goauthentik/api";
+
+import "../ak-array-input.js";
 
 const sampleItems: FooterLink[] = [
     { name: "authentik", href: "https://goauthentik.io" },

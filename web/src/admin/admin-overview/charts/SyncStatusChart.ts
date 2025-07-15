@@ -1,23 +1,13 @@
-import "#elements/forms/ConfirmationForm";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { AKChart } from "#elements/charts/Chart";
-import { actionToColor } from "#elements/charts/EventChart";
-import { PaginatedResponse } from "#elements/table/Table";
-
-import {
-    EventActions,
-    ProvidersApi,
-    SourcesApi,
-    SyncStatus,
-    SystemTaskStatusEnum,
-} from "@goauthentik/api";
-
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { AKChart } from "@goauthentik/elements/charts/Chart";
+import "@goauthentik/elements/forms/ConfirmationForm";
+import { PaginatedResponse } from "@goauthentik/elements/table/Table";
 import { ChartData, ChartOptions } from "chart.js";
 
 import { msg } from "@lit/localize";
 import { customElement } from "lit/decorators.js";
+
+import { ProvidersApi, SourcesApi, SyncStatus, SystemTaskStatusEnum } from "@goauthentik/api";
 
 export interface SummarizedSyncStatus {
     healthy: number;
@@ -146,11 +136,7 @@ export class SyncStatusChart extends AKChart<SummarizedSyncStatus[]> {
             labels: [msg("Healthy"), msg("Failed"), msg("Unsynced / N/A")],
             datasets: data.map((d) => {
                 return {
-                    backgroundColor: [
-                        actionToColor(EventActions.Login),
-                        actionToColor(EventActions.SuspiciousRequest),
-                        actionToColor(EventActions.AuthorizeApplication),
-                    ],
+                    backgroundColor: ["#3e8635", "#C9190B", "#2b9af3"],
                     spanGaps: true,
                     data: [d.healthy, d.failed, d.unsynced],
                     label: d.label,

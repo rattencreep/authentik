@@ -1,17 +1,15 @@
-import "#elements/Alert";
-import "#elements/forms/FormGroup";
-import "#elements/forms/HorizontalFormElement";
-import "#elements/utils/TimeDeltaHelp";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { BaseStageForm } from "#admin/stages/BaseStageForm";
-
-import { GeoipBindingEnum, NetworkBindingEnum, StagesApi, UserLoginStage } from "@goauthentik/api";
+import { BaseStageForm } from "@goauthentik/admin/stages/BaseStageForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/elements/Alert";
+import "@goauthentik/elements/forms/FormGroup";
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import "@goauthentik/elements/utils/TimeDeltaHelp";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
+
+import { GeoipBindingEnum, NetworkBindingEnum, StagesApi, UserLoginStage } from "@goauthentik/api";
 
 @customElement("ak-stage-user-login-form")
 export class UserLoginStageForm extends BaseStageForm<UserLoginStage> {
@@ -35,7 +33,7 @@ export class UserLoginStageForm extends BaseStageForm<UserLoginStage> {
 
     renderForm(): TemplateResult {
         return html` <span>${msg("Log the currently pending user in.")}</span>
-            <ak-form-element-horizontal label=${msg("Name")} required name="name">
+            <ak-form-element-horizontal label=${msg("Name")} ?required=${true} name="name">
                 <input
                     type="text"
                     value="${this.instance?.name ?? ""}"
@@ -43,12 +41,12 @@ export class UserLoginStageForm extends BaseStageForm<UserLoginStage> {
                     required
                 />
             </ak-form-element-horizontal>
-            <ak-form-group expanded>
+            <ak-form-group .expanded=${true}>
                 <span slot="header"> ${msg("Stage-specific settings")} </span>
                 <div slot="body" class="pf-c-form">
                     <ak-form-element-horizontal
                         label=${msg("Session duration")}
-                        required
+                        ?required=${true}
                         name="sessionDuration"
                     >
                         <input
@@ -65,7 +63,7 @@ export class UserLoginStageForm extends BaseStageForm<UserLoginStage> {
                             )}
                         </p>
                         <ak-utils-time-delta-help></ak-utils-time-delta-help>
-                        <ak-alert inline>
+                        <ak-alert ?inline=${true}>
                             ${msg(
                                 "Different browsers handle session cookies differently, and might not remove them even when the browser is closed.",
                             )}
@@ -79,7 +77,7 @@ export class UserLoginStageForm extends BaseStageForm<UserLoginStage> {
                     </ak-form-element-horizontal>
                     <ak-form-element-horizontal
                         label=${msg("Stay signed in offset")}
-                        required
+                        ?required=${true}
                         name="rememberMeOffset"
                     >
                         <input
@@ -98,28 +96,8 @@ export class UserLoginStageForm extends BaseStageForm<UserLoginStage> {
                         <ak-utils-time-delta-help></ak-utils-time-delta-help>
                     </ak-form-element-horizontal>
                     <ak-form-element-horizontal
-                        label=${msg("Remember device")}
-                        required
-                        name="rememberDevice"
-                    >
-                        <input
-                            type="text"
-                            value="${this.instance?.rememberDevice ?? "days=30"}"
-                            class="pf-c-form-control pf-m-monospace"
-                            autocomplete="off"
-                            spellcheck="false"
-                            required
-                        />
-                        <p class="pf-c-form__helper-text">
-                            ${msg(
-                                "If set to a duration above 0, a cookie will be stored for the duration specified which will allow authentik to know if the user is signing in from a new device.",
-                            )}
-                        </p>
-                        <ak-utils-time-delta-help></ak-utils-time-delta-help>
-                    </ak-form-element-horizontal>
-                    <ak-form-element-horizontal
                         label=${msg("Network binding")}
-                        required
+                        ?required=${true}
                         name="networkBinding"
                     >
                         <ak-radio
@@ -153,7 +131,7 @@ export class UserLoginStageForm extends BaseStageForm<UserLoginStage> {
                     </ak-form-element-horizontal>
                     <ak-form-element-horizontal
                         label=${msg("GeoIP binding")}
-                        required
+                        ?required=${true}
                         name="geoipBinding"
                     >
                         <ak-radio

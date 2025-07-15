@@ -1,6 +1,5 @@
-import "#user/LibraryPage/ak-library";
-
-import { Route } from "#elements/router/Route";
+import { Route } from "@goauthentik/elements/router/Route";
+import "@goauthentik/user/LibraryPage/ak-library.js";
 
 import { html } from "lit";
 
@@ -10,7 +9,7 @@ export const ROUTES: Route[] = [
     new Route(new RegExp("^#.*")).redirect("/library"),
     new Route(new RegExp("^/library$"), async () => html`<ak-library></ak-library>`),
     new Route(new RegExp("^/settings$"), async () => {
-        await import("#user/user-settings/UserSettingsPage");
+        await import("@goauthentik/user/user-settings/UserSettingsPage");
         return html`<ak-user-settings></ak-user-settings>`;
     }),
 ];

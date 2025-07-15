@@ -1,16 +1,16 @@
-import "#admin/common/ak-crypto-certificate-search";
-import "#admin/common/ak-flow-search/ak-flow-search";
-import "#elements/ak-dual-select/ak-dual-select-dynamic-selected-provider";
-import "#elements/forms/FormGroup";
-import "#elements/forms/HorizontalFormElement";
-import "#elements/forms/Radio";
-import "#elements/forms/SearchSelect/index";
-import "#elements/utils/TimeDeltaHelp";
+import "@goauthentik/admin/common/ak-crypto-certificate-search";
+import "@goauthentik/admin/common/ak-flow-search/ak-flow-search";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/elements/ak-dual-select/ak-dual-select-dynamic-selected-provider.js";
+import "@goauthentik/elements/forms/FormGroup";
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import "@goauthentik/elements/forms/Radio";
+import "@goauthentik/elements/forms/SearchSelect";
+import "@goauthentik/elements/utils/TimeDeltaHelp";
 
-import { propertyMappingsProvider, propertyMappingsSelector } from "./SAMLProviderFormHelpers.js";
-import { digestAlgorithmOptions, signatureAlgorithmOptions } from "./SAMLProviderOptions.js";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
+import { msg } from "@lit/localize";
+import { html, nothing } from "lit";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 import {
     FlowsInstancesListDesignationEnum,
@@ -22,9 +22,8 @@ import {
     ValidationError,
 } from "@goauthentik/api";
 
-import { msg } from "@lit/localize";
-import { html, nothing } from "lit";
-import { ifDefined } from "lit/directives/if-defined.js";
+import { propertyMappingsProvider, propertyMappingsSelector } from "./SAMLProviderFormHelpers.js";
+import { digestAlgorithmOptions, signatureAlgorithmOptions } from "./SAMLProviderOptions";
 
 const serviceProviderBindingOptions = [
     {
@@ -85,7 +84,7 @@ export function renderForm(
             </p>
         </ak-form-element-horizontal>
 
-        <ak-form-group expanded>
+        <ak-form-group .expanded=${true}>
             <span slot="header"> ${msg("Protocol settings")} </span>
             <div slot="body" class="pf-c-form">
                 <ak-text-input
@@ -128,6 +127,7 @@ export function renderForm(
             <div slot="body" class="pf-c-form">
                 <ak-form-element-horizontal
                     label=${msg("Authentication flow")}
+                    ?required=${false}
                     name="authenticationFlow"
                 >
                     <ak-flow-search
@@ -236,7 +236,7 @@ export function renderForm(
                         .selected=${(item: SAMLPropertyMapping): boolean => {
                             return provider?.nameIdMapping === item.pk;
                         }}
-                        blankable
+                        ?blankable=${true}
                     >
                     </ak-search-select>
                     <p class="pf-c-form__helper-text">
@@ -271,7 +271,7 @@ export function renderForm(
                         .selected=${(item: SAMLPropertyMapping): boolean => {
                             return provider?.authnContextClassRefMapping === item.pk;
                         }}
-                        blankable
+                        ?blankable=${true}
                     >
                     </ak-search-select>
                     <p class="pf-c-form__helper-text">

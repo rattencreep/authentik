@@ -1,19 +1,17 @@
-import "#components/ak-status-label";
-import "#elements/buttons/SpinnerButton/index";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-import { formatElapsedTime } from "#common/temporal";
-
-import { PaginatedResponse, TableColumn } from "#elements/table/Table";
-import { TableModal } from "#elements/table/TableModal";
-
-import { CoreApi, CoreUsersListRequest, User } from "@goauthentik/api";
-
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { formatElapsedTime } from "@goauthentik/common/temporal";
+import "@goauthentik/components/ak-status-label";
+import "@goauthentik/elements/buttons/SpinnerButton";
+import { PaginatedResponse } from "@goauthentik/elements/table/Table";
+import { TableColumn } from "@goauthentik/elements/table/Table";
+import { TableModal } from "@goauthentik/elements/table/TableModal";
 import { match } from "ts-pattern";
 
 import { msg } from "@lit/localize";
-import { css, html, TemplateResult } from "lit";
+import { TemplateResult, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
+
+import { CoreApi, CoreUsersListRequest, User } from "@goauthentik/api";
 
 // Leaving room in the future for a multi-state control if someone somehow needs to filter inactive
 // users as well.
@@ -22,14 +20,16 @@ type UserListRequestFilter = Partial<Pick<CoreUsersListRequest, "isActive">>;
 
 @customElement("ak-group-member-select-table")
 export class MemberSelectTable extends TableModal<User> {
-    static styles = [
-        ...super.styles,
-        css`
-            .show-disabled-toggle-group {
-                margin-inline-start: 0.5rem;
-            }
-        `,
-    ];
+    static get styles() {
+        return [
+            ...super.styles,
+            css`
+                .show-disabled-toggle-group {
+                    margin-inline-start: 0.5rem;
+                }
+            `,
+        ];
+    }
 
     checkbox = true;
     checkboxChip = true;

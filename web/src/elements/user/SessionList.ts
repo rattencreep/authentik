@@ -1,17 +1,15 @@
-import "#elements/forms/DeleteBulkForm";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-import { formatElapsedTime } from "#common/temporal";
-
-import { PaginatedResponse, Table, TableColumn } from "#elements/table/Table";
-
-import { AuthenticatedSession, CoreApi } from "@goauthentik/api";
-
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { formatElapsedTime } from "@goauthentik/common/temporal";
+import "@goauthentik/elements/forms/DeleteBulkForm";
+import { PaginatedResponse } from "@goauthentik/elements/table/Table";
+import { Table, TableColumn } from "@goauthentik/elements/table/Table";
 import getUnicodeFlagIcon from "country-flag-icons/unicode";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
+
+import { AuthenticatedSession, CoreApi } from "@goauthentik/api";
 
 @customElement("ak-user-session-list")
 export class AuthenticatedSessionList extends Table<AuthenticatedSession> {

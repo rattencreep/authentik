@@ -1,11 +1,14 @@
-import { EVENT_REFRESH } from "#common/constants";
-import { PFSize } from "#common/enums";
-import { APIError, parseAPIResponseError, pluckErrorDetail } from "#common/errors/network";
-
-import { AggregateCard } from "#elements/cards/AggregateCard";
+import { EVENT_REFRESH } from "@goauthentik/common/constants";
+import { PFSize } from "@goauthentik/common/enums.js";
+import {
+    APIError,
+    parseAPIResponseError,
+    pluckErrorDetail,
+} from "@goauthentik/common/errors/network";
+import { AggregateCard } from "@goauthentik/elements/cards/AggregateCard";
 
 import { msg } from "@lit/localize";
-import { html, nothing, PropertyValues, TemplateResult } from "lit";
+import { PropertyValues, TemplateResult, html, nothing } from "lit";
 import { state } from "lit/decorators.js";
 
 export interface AdminStatus {

@@ -1,7 +1,6 @@
 /**
  * @file Utilities for working with the client-side page router.
  */
-
 import { kebabCase } from "change-case";
 
 /**

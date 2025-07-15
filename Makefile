@@ -73,7 +73,7 @@ core-i18n-extract:
 		--ignore website \
 		-l en
 
-install: node-install website-install core-install  ## Install all requires dependencies for `web`, `website` and `core`
+install: web-install website-install core-install  ## Install all requires dependencies for `web`, `website` and `core`
 
 dev-drop-db:
 	dropdb -U ${pg_user} -h ${pg_host} ${pg_name}
@@ -98,7 +98,7 @@ gen-build:  ## Extract the schema from the database
 	AUTHENTIK_DEBUG=true \
 		AUTHENTIK_TENANTS__ENABLED=true \
 		AUTHENTIK_OUTPOSTS__DISABLE_EMBEDDED_OUTPOST=true \
-		uv run ak make_blueprint_schema --file blueprints/schema.json
+		uv run ak make_blueprint_schema > blueprints/schema.json
 	AUTHENTIK_DEBUG=true \
 		AUTHENTIK_TENANTS__ENABLED=true \
 		AUTHENTIK_OUTPOSTS__DISABLE_EMBEDDED_OUTPOST=true \
@@ -150,9 +150,9 @@ gen-client-ts: gen-clean-ts  ## Build and install the authentik API for Typescri
 		--additional-properties=npmVersion=${NPM_VERSION} \
 		--git-repo-id authentik \
 		--git-user-id goauthentik
-
-	cd ${PWD}/${GEN_API_TS} && npm link
-	cd ${PWD}/web && npm link @goauthentik/api
+	mkdir -p web/node_modules/@goauthentik/api
+	cd ${PWD}/${GEN_API_TS} && npm i
+	\cp -rf ${PWD}/${GEN_API_TS}/* web/node_modules/@goauthentik/api
 
 gen-client-py: gen-clean-py ## Build and install the authentik API for Python
 	docker run \
@@ -184,21 +184,16 @@ gen-dev-config:  ## Generate a local development config file
 gen: gen-build gen-client-ts
 
 #########################
-## Node.js
-#########################
-
-node-install:  ## Install the necessary libraries to build Node.js packages
-	npm ci
-	npm ci --prefix web
-
-#########################
 ## Web
 #########################
 
-web-build: node-install  ## Build the Authentik UI
+web-build: web-install  ## Build the Authentik UI
 	cd web && npm run build
 
 web: web-lint-fix web-lint web-check-compile  ## Automatically fix formatting issues in the Authentik UI source code, lint the code, and compile it
+
+web-install:  ## Install the necessary libraries to build the Authentik UI
+	cd web && npm ci
 
 web-test: ## Run tests for the Authentik UI
 	cd web && npm run test

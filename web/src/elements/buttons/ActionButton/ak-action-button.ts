@@ -1,7 +1,6 @@
-import { MessageLevel } from "#common/messages";
-
-import { BaseTaskButton } from "#elements/buttons/SpinnerButton/BaseTaskButton";
-import { showMessage } from "#elements/messages/MessageContainer";
+import { MessageLevel } from "@goauthentik/common/messages";
+import { BaseTaskButton } from "@goauthentik/elements/buttons/SpinnerButton/BaseTaskButton";
+import { showMessage } from "@goauthentik/elements/messages/MessageContainer";
 
 import { customElement, property } from "lit/decorators.js";
 

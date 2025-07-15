@@ -1,12 +1,20 @@
-import "#flow/components/ak-flow-card";
-import "#flow/stages/authenticator_validate/AuthenticatorValidateStageCode";
-import "#flow/stages/authenticator_validate/AuthenticatorValidateStageDuo";
-import "#flow/stages/authenticator_validate/AuthenticatorValidateStageWebAuthn";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/flow/stages/authenticator_validate/AuthenticatorValidateStageCode";
+import "@goauthentik/flow/stages/authenticator_validate/AuthenticatorValidateStageDuo";
+import "@goauthentik/flow/stages/authenticator_validate/AuthenticatorValidateStageWebAuthn";
+import { BaseStage, StageHost, SubmitOptions } from "@goauthentik/flow/stages/base";
+import { PasswordManagerPrefill } from "@goauthentik/flow/stages/identification/IdentificationStage";
 
-import { DEFAULT_CONFIG } from "#common/api/config";
+import { msg } from "@lit/localize";
+import { CSSResult, PropertyValues, TemplateResult, css, html, nothing } from "lit";
+import { customElement, state } from "lit/decorators.js";
 
-import { BaseStage, StageHost, SubmitOptions } from "#flow/stages/base";
-import { PasswordManagerPrefill } from "#flow/stages/identification/IdentificationStage";
+import PFButton from "@patternfly/patternfly/components/Button/button.css";
+import PFForm from "@patternfly/patternfly/components/Form/form.css";
+import PFFormControl from "@patternfly/patternfly/components/FormControl/form-control.css";
+import PFLogin from "@patternfly/patternfly/components/Login/login.css";
+import PFTitle from "@patternfly/patternfly/components/Title/title.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import {
     AuthenticatorValidationChallenge,
@@ -17,22 +25,11 @@ import {
     FlowsApi,
 } from "@goauthentik/api";
 
-import { msg } from "@lit/localize";
-import { css, CSSResult, html, nothing, PropertyValues, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators.js";
-
-import PFButton from "@patternfly/patternfly/components/Button/button.css";
-import PFForm from "@patternfly/patternfly/components/Form/form.css";
-import PFFormControl from "@patternfly/patternfly/components/FormControl/form-control.css";
-import PFLogin from "@patternfly/patternfly/components/Login/login.css";
-import PFTitle from "@patternfly/patternfly/components/Title/title.css";
-import PFBase from "@patternfly/patternfly/patternfly-base.css";
-
 const customCSS = css`
     ul {
         padding-top: 1rem;
     }
-    ul > li {
+    ul > li:not(:last-child) {
         padding-bottom: 1rem;
     }
     .authenticator-button {
@@ -67,15 +64,9 @@ export class AuthenticatorValidateStage
     >
     implements StageHost
 {
-    static styles: CSSResult[] = [
-        PFBase,
-        PFLogin,
-        PFForm,
-        PFFormControl,
-        PFTitle,
-        PFButton,
-        customCSS,
-    ];
+    static get styles(): CSSResult[] {
+        return [PFBase, PFLogin, PFForm, PFFormControl, PFTitle, PFButton, customCSS];
+    }
 
     flowSlug = "";
 
@@ -195,7 +186,7 @@ export class AuthenticatorValidateStage
                         <small>${msg("Tokens sent via SMS.")}</small>
                     </div>`;
             case DeviceClassesEnum.Email:
-                return html`<i class="fas fa-envelope"></i>
+                return html`<i class="fas fa-envelope-o"></i>
                     <div class="right">
                         <p>${msg("Email")}</p>
                         <small>${msg("Tokens sent via email.")}</small>
@@ -285,20 +276,28 @@ export class AuthenticatorValidateStage
     }
 
     render(): TemplateResult {
-        return html`<ak-flow-card .challenge=${this.challenge}>
-            ${this.selectedDeviceChallenge
-                ? this.renderDeviceChallenge()
-                : html`<form class="pf-c-form">
-                          ${this.renderUserInfo()}
-                          ${this.selectedDeviceChallenge
-                              ? nothing
-                              : html`<p>${msg("Select an authentication method.")}</p>`}
-                          ${this.challenge.configurationStages.length > 0
-                              ? this.renderStagePicker()
-                              : nothing}
-                      </form>
-                      ${this.renderDevicePicker()}`}
-        </ak-flow-card>`;
+        return this.challenge
+            ? html`<header class="pf-c-login__main-header">
+                      <h1 class="pf-c-title pf-m-3xl">${this.challenge.flowInfo?.title}</h1>
+                  </header>
+                  ${this.selectedDeviceChallenge
+                      ? this.renderDeviceChallenge()
+                      : html`<div class="pf-c-login__main-body">
+                                <form class="pf-c-form">
+                                    ${this.renderUserInfo()}
+                                    ${this.selectedDeviceChallenge
+                                        ? ""
+                                        : html`<p>${msg("Select an authentication method.")}</p>`}
+                                    ${this.challenge.configurationStages.length > 0
+                                        ? this.renderStagePicker()
+                                        : html``}
+                                </form>
+                                ${this.renderDevicePicker()}
+                            </div>
+                            <footer class="pf-c-login__main-footer">
+                                <ul class="pf-c-login__main-footer-links"></ul>
+                            </footer>`}`
+            : html`<ak-empty-state loading> </ak-empty-state>`;
     }
 }
 

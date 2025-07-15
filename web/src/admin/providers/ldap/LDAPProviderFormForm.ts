@@ -1,17 +1,28 @@
-import "#admin/common/ak-crypto-certificate-search";
-import "#admin/common/ak-flow-search/ak-branded-flow-search";
-import "#admin/common/ak-flow-search/ak-flow-search";
-import "#components/ak-number-input";
-import "#components/ak-radio-input";
-import "#components/ak-text-input";
-import "#components/ak-textarea-input";
-import "#elements/ak-dual-select/ak-dual-select-dynamic-selected-provider";
-import "#elements/ak-dual-select/ak-dual-select-provider";
-import "#elements/forms/FormGroup";
-import "#elements/forms/HorizontalFormElement";
-import "#elements/forms/Radio";
-import "#elements/forms/SearchSelect/index";
-import "#elements/utils/TimeDeltaHelp";
+import "@goauthentik/admin/common/ak-crypto-certificate-search";
+import "@goauthentik/admin/common/ak-flow-search/ak-branded-flow-search";
+import "@goauthentik/admin/common/ak-flow-search/ak-flow-search";
+import "@goauthentik/components/ak-number-input";
+import "@goauthentik/components/ak-radio-input";
+import "@goauthentik/components/ak-text-input";
+import "@goauthentik/components/ak-textarea-input";
+import "@goauthentik/elements/ak-dual-select/ak-dual-select-dynamic-selected-provider.js";
+import "@goauthentik/elements/ak-dual-select/ak-dual-select-provider.js";
+import "@goauthentik/elements/forms/FormGroup";
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import "@goauthentik/elements/forms/Radio";
+import "@goauthentik/elements/forms/SearchSelect";
+import "@goauthentik/elements/utils/TimeDeltaHelp";
+
+import { msg } from "@lit/localize";
+import { html, nothing } from "lit";
+import { ifDefined } from "lit/directives/if-defined.js";
+
+import {
+    CurrentBrand,
+    FlowsInstancesListDesignationEnum,
+    LDAPProvider,
+    ValidationError,
+} from "@goauthentik/api";
 
 import {
     bindModeOptions,
@@ -22,17 +33,6 @@ import {
     tlsServerNameHelp,
     uidStartNumberHelp,
 } from "./LDAPOptionsAndHelp.js";
-
-import {
-    CurrentBrand,
-    FlowsInstancesListDesignationEnum,
-    LDAPProvider,
-    ValidationError,
-} from "@goauthentik/api";
-
-import { msg } from "@lit/localize";
-import { html, nothing } from "lit";
-import { ifDefined } from "lit/directives/if-defined.js";
 
 // All Provider objects have an Authorization flow, but not all providers have an Authentication
 // flow. LDAP needs only one field, but it is not an Authorization field, it is an Authentication
@@ -86,7 +86,7 @@ export function renderForm(
             <div slot="body" class="pf-c-form">
                 <ak-form-element-horizontal
                     label=${msg("Bind flow")}
-                    required
+                    ?required=${true}
                     name="authorizationFlow"
                     .errorMessages=${errors?.authorizationFlow ?? []}
                 >
@@ -127,7 +127,7 @@ export function renderForm(
                     label=${msg("Base DN")}
                     required
                     value="${provider?.baseDn ?? "DC=ldap,DC=goauthentik,DC=io"}"
-                    input-hint="code"
+                    inputHint="code"
                     .errorMessages=${errors?.baseDn ?? []}
                     help=${msg(
                         "LDAP DN under which bind requests and search requests can be made.",
@@ -154,7 +154,7 @@ export function renderForm(
                     value="${provider?.tlsServerName ?? ""}"
                     .errorMessages=${errors?.tlsServerName ?? []}
                     help=${tlsServerNameHelp}
-                    input-hint="code"
+                    inputHint="code"
                 ></ak-text-input>
 
                 <ak-number-input

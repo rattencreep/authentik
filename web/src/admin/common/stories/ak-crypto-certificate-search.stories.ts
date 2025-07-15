@@ -1,13 +1,12 @@
-import "#elements/forms/HorizontalFormElement";
-import "#elements/messages/MessageContainer";
-import "../ak-crypto-certificate-search.js";
-
-import AkCryptoCertificateSearch from "../ak-crypto-certificate-search.js";
-import { dummyCryptoCertsSearch } from "./samples.js";
-
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import "@goauthentik/elements/messages/MessageContainer";
 import { Meta } from "@storybook/web-components";
 
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
+
+import "../ak-crypto-certificate-search";
+import AkCryptoCertificateSearch from "../ak-crypto-certificate-search";
+import { dummyCryptoCertsSearch } from "./samples";
 
 const metadata: Meta<AkCryptoCertificateSearch> = {
     title: "Components / Searches / CryptoCertificateKeyPair",

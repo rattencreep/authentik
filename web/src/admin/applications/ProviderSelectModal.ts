@@ -1,15 +1,14 @@
-import "#elements/buttons/SpinnerButton/index";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { PaginatedResponse, TableColumn } from "#elements/table/Table";
-import { TableModal } from "#elements/table/TableModal";
-
-import { Provider, ProvidersApi } from "@goauthentik/api";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/elements/buttons/SpinnerButton";
+import { PaginatedResponse } from "@goauthentik/elements/table/Table";
+import { TableColumn } from "@goauthentik/elements/table/Table";
+import { TableModal } from "@goauthentik/elements/table/TableModal";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
+
+import { Provider, ProvidersApi } from "@goauthentik/api";
 
 @customElement("ak-provider-select-table")
 export class ProviderSelectModal extends TableModal<Provider> {
@@ -21,7 +20,7 @@ export class ProviderSelectModal extends TableModal<Provider> {
     }
 
     @property({ type: Boolean })
-    backchannel = false;
+    backchannel?: boolean;
 
     @property()
     confirm!: (selectedItems: Provider[]) => Promise<unknown>;

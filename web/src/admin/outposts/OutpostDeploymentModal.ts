@@ -1,15 +1,13 @@
-import "#elements/buttons/TokenCopyButton/index";
-
-import { docLink } from "#common/global";
-
-import { ModalButton } from "#elements/buttons/ModalButton";
-
-import { Outpost, OutpostTypeEnum } from "@goauthentik/api";
+import { docLink } from "@goauthentik/common/global";
+import { ModalButton } from "@goauthentik/elements/buttons/ModalButton";
+import "@goauthentik/elements/buttons/TokenCopyButton";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+
+import { Outpost, OutpostTypeEnum } from "@goauthentik/api";
 
 @customElement("ak-outpost-deployment-modal")
 export class OutpostDeploymentModal extends ModalButton {

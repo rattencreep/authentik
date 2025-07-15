@@ -1,13 +1,13 @@
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { AKElement } from "#elements/Base";
-import { SearchSelect } from "#elements/forms/SearchSelect/index";
-import { CustomListenerElement } from "#elements/utils/eventEmitter";
-
-import { CoreApi, CoreGroupsListRequest, Group } from "@goauthentik/api";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { AKElement } from "@goauthentik/elements/Base";
+import { SearchSelect } from "@goauthentik/elements/forms/SearchSelect";
+import { CustomListenerElement } from "@goauthentik/elements/utils/eventEmitter";
 
 import { html } from "lit";
-import { customElement, property, query } from "lit/decorators.js";
+import { customElement } from "lit/decorators.js";
+import { property, query } from "lit/decorators.js";
+
+import { CoreApi, CoreGroupsListRequest, Group } from "@goauthentik/api";
 
 async function fetchObjects(query?: string): Promise<Group[]> {
     const args: CoreGroupsListRequest = {
@@ -95,7 +95,7 @@ export class CoreGroupSearch extends CustomListenerElement(AKElement) {
                 .value=${renderValue}
                 .selected=${this.selected}
                 @ak-change=${this.handleSearchUpdate}
-                blankable
+                ?blankable=${true}
             >
             </ak-search-select>
         `;

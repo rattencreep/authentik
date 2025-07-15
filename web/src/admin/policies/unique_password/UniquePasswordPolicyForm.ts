@@ -1,16 +1,14 @@
-import "#elements/forms/FormGroup";
-import "#elements/forms/HorizontalFormElement";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { BasePolicyForm } from "#admin/policies/BasePolicyForm";
-
-import { PoliciesApi, UniquePasswordPolicy } from "@goauthentik/api";
+import { BasePolicyForm } from "@goauthentik/admin/policies/BasePolicyForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/elements/forms/FormGroup";
+import "@goauthentik/elements/forms/HorizontalFormElement";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+
+import { PoliciesApi, UniquePasswordPolicy } from "@goauthentik/api";
 
 @customElement("ak-policy-password-uniqueness-form")
 export class UniquePasswordPolicyForm extends BasePolicyForm<UniquePasswordPolicy> {
@@ -38,7 +36,7 @@ export class UniquePasswordPolicyForm extends BasePolicyForm<UniquePasswordPolic
                     "Ensure that the user's new password is different from their previous passwords. The number of past passwords to check is configurable.",
                 )}
             </span>
-            <ak-form-element-horizontal label=${msg("Name")} required name="name">
+            <ak-form-element-horizontal label=${msg("Name")} ?required=${true} name="name">
                 <input
                     type="text"
                     value="${ifDefined(this.instance?.name || "")}"
@@ -68,7 +66,7 @@ export class UniquePasswordPolicyForm extends BasePolicyForm<UniquePasswordPolic
             </ak-form-element-horizontal>
             <ak-form-element-horizontal
                 label=${msg("Password field")}
-                required
+                ?required=${true}
                 name="passwordField"
             >
                 <input
@@ -83,7 +81,7 @@ export class UniquePasswordPolicyForm extends BasePolicyForm<UniquePasswordPolic
             </ak-form-element-horizontal>
             <ak-form-element-horizontal
                 label=${msg("Number of previous passwords to check")}
-                required
+                ?required=${true}
                 name="numHistoricalPasswords"
             >
                 <input

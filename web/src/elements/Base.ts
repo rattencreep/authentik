@@ -1,27 +1,23 @@
 import { globalAK } from "#common/global";
-import { createCSSResult, createStyleSheetUnsafe, StyleRoot } from "#common/stylesheets";
+import { StyleRoot, createCSSResult, createStyleSheetUnsafe } from "#common/stylesheets";
 import {
     $AKBase,
+    CSSColorSchemeValue,
+    ResolvedUITheme,
     applyUITheme,
     createUIThemeEffect,
-    CSSColorSchemeValue,
     formatColorScheme,
-    ResolvedUITheme,
     resolveUITheme,
 } from "#common/theme";
-
-import { UiThemeEnum } from "@goauthentik/api";
 
 import { localized } from "@lit/localize";
 import { CSSResult, CSSResultGroup, CSSResultOrNative, LitElement } from "lit";
 import { property } from "lit/decorators.js";
 
-export interface AKElementProps {
-    activeTheme: ResolvedUITheme;
-}
+import { UiThemeEnum } from "@goauthentik/api";
 
 @localized()
-export class AKElement extends LitElement implements AKElementProps {
+export class AKElement extends LitElement {
     //#region Static Properties
 
     public static styles?: Array<CSSResult | CSSModule>;
@@ -146,32 +142,6 @@ export class AKElement extends LitElement implements AKElementProps {
 
     protected get styleRoot(): StyleRoot | undefined {
         return this.#styleRoot;
-    }
-
-    protected hasSlotted(name: string | null) {
-        const isNotNestedSlot = (start: Element) => {
-            let node = start.parentNode;
-            while (node && node !== this) {
-                if (node instanceof Element && node.hasAttribute("slot")) {
-                    return false;
-                }
-                node = node.parentNode;
-            }
-            return true;
-        };
-
-        // All child slots accessible from the component's LightDOM that match the request
-        const allChildSlotRequests =
-            typeof name === "string"
-                ? [...this.querySelectorAll(`[slot="${name}"]`)]
-                : [...this.children].filter((child) => {
-                      const slotAttr = child.getAttribute("slot");
-                      return !slotAttr || slotAttr === "";
-                  });
-
-        // All child slots accessible from the LightDom that match the request *and* are not nested
-        // within another slotted element.
-        return allChildSlotRequests.filter((node) => isNotNestedSlot(node)).length > 0;
     }
 
     //#endregion

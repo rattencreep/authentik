@@ -1,22 +1,18 @@
-import "#elements/EmptyState";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { EVENT_NOTIFICATION_DRAWER_TOGGLE, EVENT_REFRESH } from "@goauthentik/common/constants";
+import { globalAK } from "@goauthentik/common/global";
+import { actionToLabel } from "@goauthentik/common/labels";
+import { MessageLevel } from "@goauthentik/common/messages";
+import { formatElapsedTime } from "@goauthentik/common/temporal";
+import { me } from "@goauthentik/common/users";
+import { AKElement } from "@goauthentik/elements/Base";
+import "@goauthentik/elements/EmptyState";
+import { showMessage } from "@goauthentik/elements/messages/MessageContainer";
+import { PaginatedResponse } from "@goauthentik/elements/table/Table";
 import "@patternfly/elements/pf-tooltip/pf-tooltip.js";
 
-import { DEFAULT_CONFIG } from "#common/api/config";
-import { EVENT_NOTIFICATION_DRAWER_TOGGLE, EVENT_REFRESH } from "#common/constants";
-import { globalAK } from "#common/global";
-import { actionToLabel } from "#common/labels";
-import { MessageLevel } from "#common/messages";
-import { formatElapsedTime } from "#common/temporal";
-import { me } from "#common/users";
-
-import { AKElement } from "#elements/Base";
-import { showMessage } from "#elements/messages/MessageContainer";
-import { PaginatedResponse } from "#elements/table/Table";
-
-import { EventsApi, Notification } from "@goauthentik/api";
-
 import { msg, str } from "@lit/localize";
-import { css, CSSResult, html, TemplateResult } from "lit";
+import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
@@ -24,6 +20,8 @@ import PFContent from "@patternfly/patternfly/components/Content/content.css";
 import PFDropdown from "@patternfly/patternfly/components/Dropdown/dropdown.css";
 import PFNotificationDrawer from "@patternfly/patternfly/components/NotificationDrawer/notification-drawer.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
+
+import { EventsApi, Notification } from "@goauthentik/api";
 
 @customElement("ak-notification-drawer")
 export class NotificationDrawer extends AKElement {
@@ -33,13 +31,8 @@ export class NotificationDrawer extends AKElement {
     @property({ type: Number })
     unread = 0;
 
-    static styles: CSSResult[] = [
-        PFBase,
-        PFButton,
-        PFNotificationDrawer,
-        PFContent,
-        PFDropdown,
-        css`
+    static get styles(): CSSResult[] {
+        return [PFBase, PFButton, PFNotificationDrawer, PFContent, PFDropdown].concat(css`
             .pf-c-drawer__body {
                 height: 100%;
             }
@@ -59,8 +52,8 @@ export class NotificationDrawer extends AKElement {
             .pf-c-notification-drawer__list-item-description {
                 white-space: pre-wrap;
             }
-        `,
-    ];
+        `);
+    }
 
     firstUpdated(): void {
         me().then((user) => {
@@ -170,8 +163,7 @@ export class NotificationDrawer extends AKElement {
     }
 
     renderEmpty() {
-        return html`<ak-empty-state
-            ><span>${msg("No notifications found.")}</span>
+        return html`<ak-empty-state header=${msg("No notifications found.")}>
             <div slot="body">${msg("You don't have any notifications currently.")}</div>
         </ak-empty-state>`;
     }

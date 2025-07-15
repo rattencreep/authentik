@@ -1,11 +1,15 @@
-import "#components/ak-status-label";
-import "#elements/events/LogViewer";
-import "#elements/forms/HorizontalFormElement";
-import "#elements/forms/SearchSelect/index";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/components/ak-status-label";
+import "@goauthentik/elements/events/LogViewer";
+import { Form } from "@goauthentik/elements/forms/Form";
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import "@goauthentik/elements/forms/SearchSelect";
 
-import { DEFAULT_CONFIG } from "#common/api/config";
+import { msg } from "@lit/localize";
+import { CSSResult, TemplateResult, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
 
-import { Form } from "#elements/forms/Form";
+import PFDescriptionList from "@patternfly/patternfly/components/DescriptionList/description-list.css";
 
 import {
     Application,
@@ -15,19 +19,13 @@ import {
     User,
 } from "@goauthentik/api";
 
-import { msg } from "@lit/localize";
-import { CSSResult, html, nothing, TemplateResult } from "lit";
-import { customElement, property } from "lit/decorators.js";
-
-import PFDescriptionList from "@patternfly/patternfly/components/DescriptionList/description-list.css";
-
 @customElement("ak-application-check-access-form")
 export class ApplicationCheckAccessForm extends Form<{ forUser: number }> {
     @property({ attribute: false })
     application!: Application;
 
     @property({ attribute: false })
-    result: PolicyTestResult | null = null;
+    result?: PolicyTestResult;
 
     @property({ attribute: false })
     request?: number;
@@ -45,12 +43,14 @@ export class ApplicationCheckAccessForm extends Form<{ forUser: number }> {
         return (this.result = result);
     }
 
-    reset(): void {
-        super.reset();
-        this.result = null;
+    resetForm(): void {
+        super.resetForm();
+        this.result = undefined;
     }
 
-    static styles: CSSResult[] = [...super.styles, PFDescriptionList];
+    static get styles(): CSSResult[] {
+        return super.styles.concat(PFDescriptionList);
+    }
 
     renderResult(): TemplateResult {
         return html`
@@ -93,7 +93,11 @@ export class ApplicationCheckAccessForm extends Form<{ forUser: number }> {
     }
 
     renderForm(): TemplateResult {
-        return html`<ak-form-element-horizontal label=${msg("User")} required name="forUser">
+        return html`<ak-form-element-horizontal
+                label=${msg("User")}
+                ?required=${true}
+                name="forUser"
+            >
                 <ak-search-select
                     .fetchObjects=${async (query?: string): Promise<User[]> => {
                         const args: CoreUsersListRequest = {
@@ -120,7 +124,7 @@ export class ApplicationCheckAccessForm extends Form<{ forUser: number }> {
                 >
                 </ak-search-select>
             </ak-form-element-horizontal>
-            ${this.result ? this.renderResult() : nothing}`;
+            ${this.result ? this.renderResult() : html``}`;
     }
 }
 

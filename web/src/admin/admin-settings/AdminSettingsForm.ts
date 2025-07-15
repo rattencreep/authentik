@@ -1,28 +1,26 @@
-import "#components/ak-number-input";
-import "#components/ak-switch-input";
-import "#components/ak-text-input";
-import "#elements/ak-array-input";
-import "#elements/forms/FormGroup";
-import "#elements/forms/HorizontalFormElement";
-import "#elements/forms/Radio";
-import "#elements/forms/SearchSelect/index";
-import "#elements/utils/TimeDeltaHelp";
-import "./AdminSettingsFooterLinks.js";
-
-import { akFooterLinkInput, IFooterLinkInput } from "./AdminSettingsFooterLinks.js";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { Form } from "#elements/forms/Form";
-
-import { AdminApi, FooterLink, Settings, SettingsRequest } from "@goauthentik/api";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/components/ak-number-input";
+import "@goauthentik/components/ak-switch-input";
+import "@goauthentik/components/ak-text-input";
+import "@goauthentik/elements/ak-array-input.js";
+import { Form } from "@goauthentik/elements/forms/Form";
+import "@goauthentik/elements/forms/FormGroup";
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import "@goauthentik/elements/forms/Radio";
+import "@goauthentik/elements/forms/SearchSelect";
+import "@goauthentik/elements/utils/TimeDeltaHelp";
 
 import { msg } from "@lit/localize";
-import { css, CSSResult, html, TemplateResult } from "lit";
+import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 
 import PFList from "@patternfly/patternfly/components/List/list.css";
+
+import { AdminApi, FooterLink, Settings, SettingsRequest } from "@goauthentik/api";
+
+import "./AdminSettingsFooterLinks.js";
+import { IFooterLinkInput, akFooterLinkInput } from "./AdminSettingsFooterLinks.js";
 
 const DEFAULT_REPUTATION_LOWER_LIMIT = -5;
 const DEFAULT_REPUTATION_UPPER_LIMIT = 5;
@@ -45,15 +43,16 @@ export class AdminSettingsForm extends Form<SettingsRequest> {
 
     private _settings?: Settings;
 
-    static styles: CSSResult[] = [
-        ...super.styles,
-        PFList,
-        css`
-            ak-array-input {
-                width: 100%;
-            }
-        `,
-    ];
+    static get styles(): CSSResult[] {
+        return super.styles.concat(
+            PFList,
+            css`
+                ak-array-input {
+                    width: 100%;
+                }
+            `,
+        );
+    }
 
     getSuccessMessage(): string {
         return msg("Successfully updated settings.");
@@ -73,7 +72,7 @@ export class AdminSettingsForm extends Form<SettingsRequest> {
                 name="avatars"
                 label=${msg("Avatars")}
                 value="${ifDefined(this._settings?.avatars)}"
-                input-hint="code"
+                inputHint="code"
                 .bighelp=${html`
                     <p class="pf-c-form__helper-text">
                         ${msg(
@@ -160,7 +159,7 @@ export class AdminSettingsForm extends Form<SettingsRequest> {
             <ak-text-input
                 name="eventRetention"
                 label=${msg("Event retention")}
-                input-hint="code"
+                inputHint="code"
                 required
                 value="${ifDefined(this._settings?.eventRetention)}"
                 .bighelp=${html`<p class="pf-c-form__helper-text">
@@ -238,7 +237,7 @@ export class AdminSettingsForm extends Form<SettingsRequest> {
             <ak-text-input
                 name="defaultTokenDuration"
                 label=${msg("Default token duration")}
-                input-hint="code"
+                inputHint="code"
                 required
                 value="${ifDefined(this._settings?.defaultTokenDuration)}"
                 .bighelp=${html`<p class="pf-c-form__helper-text">

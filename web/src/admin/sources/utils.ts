@@ -1,7 +1,7 @@
-import { PolicyBindingCheckTarget } from "#admin/policies/utils";
+import { PolicyBindingCheckTarget } from "@goauthentik/admin/policies/utils";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 
 export function renderSourceIcon(name: string, iconUrl: string | undefined | null): TemplateResult {
     const icon = html`<i class="fas fa-share-square" title="${name}"></i>`;

@@ -1,4 +1,4 @@
-import { TokenCopyButton } from "./ak-token-copy-button.js";
+import { TokenCopyButton } from "./ak-token-copy-button";
 
 export { TokenCopyButton };
 export default TokenCopyButton;

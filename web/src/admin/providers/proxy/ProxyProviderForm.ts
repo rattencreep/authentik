@@ -1,13 +1,7 @@
-import "#admin/common/ak-crypto-certificate-search";
-import "#admin/common/ak-flow-search/ak-flow-search";
-
-import { renderForm, SetMode, SetShowHttpBasic } from "./ProxyProviderFormForm.js";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { BaseProviderForm } from "#admin/providers/BaseProviderForm";
-
-import { ProvidersApi, ProxyMode, ProxyProvider } from "@goauthentik/api";
+import "@goauthentik/admin/common/ak-crypto-certificate-search";
+import "@goauthentik/admin/common/ak-flow-search/ak-flow-search";
+import { BaseProviderForm } from "@goauthentik/admin/providers/BaseProviderForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
 
 import { CSSResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
@@ -16,9 +10,15 @@ import PFContent from "@patternfly/patternfly/components/Content/content.css";
 import PFList from "@patternfly/patternfly/components/List/list.css";
 import PFSpacing from "@patternfly/patternfly/utilities/Spacing/spacing.css";
 
+import { ProvidersApi, ProxyMode, ProxyProvider } from "@goauthentik/api";
+
+import { SetMode, SetShowHttpBasic, renderForm } from "./ProxyProviderFormForm.js";
+
 @customElement("ak-provider-proxy-form")
 export class ProxyProviderFormPage extends BaseProviderForm<ProxyProvider> {
-    static styles: CSSResult[] = [...super.styles, PFContent, PFList, PFSpacing];
+    static get styles(): CSSResult[] {
+        return [...super.styles, PFContent, PFList, PFSpacing];
+    }
 
     async loadInstance(pk: number): Promise<ProxyProvider> {
         const provider = await new ProvidersApi(DEFAULT_CONFIG).providersProxyRetrieve({

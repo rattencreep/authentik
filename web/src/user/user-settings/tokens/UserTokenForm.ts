@@ -1,16 +1,14 @@
-import "#elements/forms/HorizontalFormElement";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-import { dateTimeLocal } from "#common/temporal";
-
-import { ModelForm } from "#elements/forms/ModelForm";
-
-import { CoreApi, IntentEnum, Token } from "@goauthentik/api";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { dateTimeLocal } from "@goauthentik/common/temporal";
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import { ModelForm } from "@goauthentik/elements/forms/ModelForm";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+
+import { CoreApi, IntentEnum, Token } from "@goauthentik/api";
 
 @customElement("ak-user-token-form")
 export class UserTokenForm extends ModelForm<Token, string> {
@@ -51,7 +49,7 @@ export class UserTokenForm extends ModelForm<Token, string> {
 
         return html` <ak-form-element-horizontal
                 label=${msg("Identifier")}
-                required
+                ?required=${true}
                 name="identifier"
             >
                 <input

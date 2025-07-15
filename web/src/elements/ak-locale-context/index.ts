@@ -1,4 +1,4 @@
-import LocaleContext from "./ak-locale-context.js";
+import LocaleContext from "./ak-locale-context";
 
 export { LocaleContext };
 export default LocaleContext;

@@ -1,17 +1,15 @@
-import "#admin/roles/RolePermissionForm";
-import "#elements/forms/ModalForm";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-import { groupBy } from "#common/utils";
-
-import { PaginatedResponse, Table, TableColumn } from "#elements/table/Table";
-
-import { Permission, RbacApi } from "@goauthentik/api";
+import "@goauthentik/admin/roles/RolePermissionForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { groupBy } from "@goauthentik/common/utils";
+import "@goauthentik/elements/forms/ModalForm";
+import { PaginatedResponse, Table, TableColumn } from "@goauthentik/elements/table/Table";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+
+import { Permission, RbacApi } from "@goauthentik/api";
 
 @customElement("ak-role-assigned-global-permissions-table")
 export class RoleAssignedGlobalPermissionsTable extends Table<Permission> {

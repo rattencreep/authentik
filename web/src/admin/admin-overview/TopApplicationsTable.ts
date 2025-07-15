@@ -1,23 +1,23 @@
-import "#elements/Spinner";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { AKElement } from "#elements/Base";
-
-import { EventsApi, EventTopPerUser } from "@goauthentik/api";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { AKElement } from "@goauthentik/elements/Base";
+import "@goauthentik/elements/Spinner";
 
 import { msg } from "@lit/localize";
-import { CSSResult, html, TemplateResult } from "lit";
+import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 import PFTable from "@patternfly/patternfly/components/Table/table.css";
+
+import { EventTopPerUser, EventsApi } from "@goauthentik/api";
 
 @customElement("ak-top-applications-table")
 export class TopApplicationsTable extends AKElement {
     @property({ attribute: false })
     topN?: EventTopPerUser[];
 
-    static styles: CSSResult[] = [PFTable];
+    static get styles(): CSSResult[] {
+        return [PFTable];
+    }
 
     firstUpdated(): void {
         new EventsApi(DEFAULT_CONFIG)

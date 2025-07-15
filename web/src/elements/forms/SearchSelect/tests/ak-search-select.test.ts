@@ -1,20 +1,19 @@
-import "../ak-search-select.js";
-
-import { SearchSelect } from "../ak-search-select.js";
-import { sampleData, type ViewSample } from "../stories/sampleData.js";
-import { AkSearchSelectViewDriver } from "./ak-search-select-view.comp.js";
-
 /* eslint-env jest */
-import { AKElement } from "#elements/Base";
-import { bound } from "#elements/decorators/bound";
-import { render } from "#elements/tests/utils";
-import { CustomListenerElement } from "#elements/utils/eventEmitter";
-
+import { AKElement } from "@goauthentik/elements/Base.js";
+import { bound } from "@goauthentik/elements/decorators/bound.js";
+import { render } from "@goauthentik/elements/tests/utils.js";
+import { CustomListenerElement } from "@goauthentik/elements/utils/eventEmitter";
 import { $, browser, expect } from "@wdio/globals";
 import { slug } from "github-slugger";
 
 import { html } from "lit";
-import { customElement, property, query } from "lit/decorators.js";
+import { customElement } from "lit/decorators.js";
+import { property, query } from "lit/decorators.js";
+
+import "../ak-search-select.js";
+import { SearchSelect } from "../ak-search-select.js";
+import { type ViewSample, sampleData } from "../stories/sampleData.js";
+import { AkSearchSelectViewDriver } from "./ak-search-select-view.comp.js";
 
 const renderElement = (fruit: ViewSample) => fruit.produce;
 
@@ -74,7 +73,7 @@ export class MockSearch extends CustomListenerElement(AKElement) {
                 .selected=${this.selected}
                 managed
                 @ak-change=${this.handleSearchUpdate}
-                blankable
+                ?blankable=${true}
             >
             </ak-search-select>
         `;

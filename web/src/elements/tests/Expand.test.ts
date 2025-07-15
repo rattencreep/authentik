@@ -1,12 +1,10 @@
-import "../Expand.js";
-
-import { akExpand } from "../Expand.js";
-
-import { render } from "#elements/tests/utils";
-
+import { render } from "@goauthentik/elements/tests/utils.js";
 import { $, expect } from "@wdio/globals";
 
 import { html } from "lit";
+
+import "../Expand.js";
+import { akExpand } from "../Expand.js";
 
 describe("ak-expand", () => {
     afterEach(async () => {

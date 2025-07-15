@@ -1,14 +1,12 @@
-import "#admin/common/ak-flow-search/ak-flow-search";
-import "#elements/forms/HorizontalFormElement";
-
-import { AkFlowSearch } from "#admin/common/ak-flow-search/ak-flow-search";
-
-import { Flow, FlowsInstancesListDesignationEnum } from "@goauthentik/api";
-
+import "@goauthentik/admin/common/ak-flow-search/ak-flow-search";
+import { AkFlowSearch } from "@goauthentik/admin/common/ak-flow-search/ak-flow-search";
+import "@goauthentik/elements/forms/HorizontalFormElement";
 import { Meta } from "@storybook/web-components";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
+
+import { Flow, FlowsInstancesListDesignationEnum } from "@goauthentik/api";
 
 const mockData = {
     pagination: {
@@ -112,7 +110,7 @@ export const Default = () =>
     container(
         html` <ak-form-element-horizontal
             label=${msg("Authorization flow")}
-            required
+            ?required=${true}
             name="authorizationFlow"
         >
             <ak-flow-search
@@ -126,7 +124,7 @@ export const WithInitialValue = () =>
     container(
         html` <ak-form-element-horizontal
             label=${msg("Authorization flow")}
-            required
+            ?required=${true}
             name="authorizationFlow"
         >
             <ak-flow-search

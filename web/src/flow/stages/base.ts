@@ -1,13 +1,12 @@
-import { pluckErrorDetail } from "#common/errors/network";
-
-import { AKElement } from "#elements/Base";
-
-import { ContextualFlowInfo, CurrentBrand, ErrorDetail } from "@goauthentik/api";
+import { AKElement } from "@goauthentik/elements/Base";
+import { KeyUnknown } from "@goauthentik/elements/forms/Form";
 
 import { msg } from "@lit/localize";
 import { html, nothing } from "lit";
 import { property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+
+import { ContextualFlowInfo, CurrentBrand, ErrorDetail } from "@goauthentik/api";
 
 export interface SubmitOptions {
     invisible: boolean;
@@ -46,63 +45,57 @@ export interface PendingUserChallenge {
 
 export interface ResponseErrorsChallenge {
     responseErrors?: {
-        [key: string]: ErrorDetail[];
+        [key: string]: Array<ErrorDetail>;
     };
 }
 
-export abstract class BaseStage<
+export class BaseStage<
     Tin extends FlowInfoChallenge & PendingUserChallenge & ResponseErrorsChallenge,
     Tout,
 > extends AKElement {
     host!: StageHost;
 
     @property({ attribute: false })
-    public challenge!: Tin;
+    challenge!: Tin;
 
-    public submitForm = async (event?: SubmitEvent, defaults?: Tout): Promise<boolean> => {
-        event?.preventDefault();
+    async submitForm(e: Event, defaults?: Tout): Promise<boolean> {
+        e.preventDefault();
+        const object: KeyUnknown = defaults || {};
+        const form = new FormData(this.shadowRoot?.querySelector("form") || undefined);
 
-        const payload: Record<string, unknown> = defaults || {};
-
-        const form = this.shadowRoot?.querySelector("form");
-
-        if (form) {
-            const data = new FormData(form);
-
-            for await (const [key, value] of data.entries()) {
-                if (value instanceof Blob) {
-                    payload[key] = await readFileAsync(value);
-                } else {
-                    payload[key] = value;
-                }
+        for await (const [key, value] of form.entries()) {
+            if (value instanceof Blob) {
+                object[key] = await readFileAsync(value);
+            } else {
+                object[key] = value;
             }
         }
-
-        return this.host?.submit(payload).then((successful) => {
+        return this.host?.submit(object as unknown as Tout).then((successful) => {
             if (successful) {
                 this.onSubmitSuccess();
             } else {
                 this.onSubmitFailure();
             }
-
             return successful;
         });
-    };
+    }
 
     renderNonFieldErrors() {
-        const nonFieldErrors = this.challenge?.responseErrors?.non_field_errors;
-
+        const errors = this.challenge?.responseErrors || {};
+        if (!("non_field_errors" in errors)) {
+            return nothing;
+        }
+        const nonFieldErrors = errors.non_field_errors;
         if (!nonFieldErrors) {
             return nothing;
         }
-
         return html`<div class="pf-c-form__alert">
             ${nonFieldErrors.map((err) => {
                 return html`<div class="pf-c-alert pf-m-inline pf-m-danger">
                     <div class="pf-c-alert__icon">
                         <i class="fas fa-exclamation-circle"></i>
                     </div>
-                    <h4 class="pf-c-alert__title">${pluckErrorDetail(err)}</h4>
+                    <h4 class="pf-c-alert__title">${err.string}</h4>
                 </div>`;
             })}
         </div>`;

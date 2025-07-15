@@ -1,6 +1,6 @@
-import { GroupMatchingModeEnum, UserMatchingModeEnum } from "@goauthentik/api";
-
 import { msg } from "@lit/localize";
+
+import { GroupMatchingModeEnum, UserMatchingModeEnum } from "@goauthentik/api";
 
 export function UserMatchingModeToLabel(mode?: UserMatchingModeEnum): string {
     if (!mode) return "";

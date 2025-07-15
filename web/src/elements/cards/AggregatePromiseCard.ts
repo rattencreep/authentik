@@ -1,11 +1,9 @@
-import "#elements/Spinner";
-
-import { PFSize } from "#common/enums";
-
-import { AggregateCard, type IAggregateCard } from "#elements/cards/AggregateCard";
+import { PFSize } from "@goauthentik/common/enums.js";
+import "@goauthentik/elements/Spinner";
+import { AggregateCard, type IAggregateCard } from "@goauthentik/elements/cards/AggregateCard";
 
 import { msg } from "@lit/localize";
-import { html, nothing, TemplateResult } from "lit";
+import { TemplateResult, html, nothing } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { until } from "lit/directives/until.js";
 

@@ -1,11 +1,10 @@
-import { Diagram } from "#elements/Diagram";
-
-import { UserMatchingModeToLabel } from "#admin/sources/oauth/utils";
-
-import { OAuthSource, UserMatchingModeEnum } from "@goauthentik/api";
+import { UserMatchingModeToLabel } from "@goauthentik/admin/sources/oauth/utils";
+import { Diagram } from "@goauthentik/elements/Diagram";
 
 import { msg, str } from "@lit/localize";
 import { customElement, property } from "lit/decorators.js";
+
+import { OAuthSource, UserMatchingModeEnum } from "@goauthentik/api";
 
 @customElement("ak-source-oauth-diagram")
 export class OAuthSourceDiagram extends Diagram {

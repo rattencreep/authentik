@@ -1,6 +1,11 @@
-import { OneOfProvider } from "../types.js";
+import {
+    type DescriptionPair,
+    renderDescriptionList,
+} from "@goauthentik/components/DescriptionList.js";
+import { match } from "ts-pattern";
 
-import { type DescriptionPair, renderDescriptionList } from "#components/DescriptionList";
+import { msg } from "@lit/localize";
+import { html } from "lit";
 
 import {
     ClientTypeEnum,
@@ -17,10 +22,7 @@ import {
     SCIMProvider,
 } from "@goauthentik/api";
 
-import { match } from "ts-pattern";
-
-import { msg } from "@lit/localize";
-import { html } from "lit";
+import { OneOfProvider } from "../types.js";
 
 const renderSummary = (type: string, name: string, fields: DescriptionPair[]) =>
     renderDescriptionList([[msg("Type"), type], [msg("Name"), name], ...fields], {

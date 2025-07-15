@@ -1,8 +1,10 @@
-import "#elements/forms/HorizontalFormElement";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { Form } from "@goauthentik/elements/forms/Form";
+import "@goauthentik/elements/forms/HorizontalFormElement";
 
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { Form } from "#elements/forms/Form";
+import { msg } from "@lit/localize";
+import { TemplateResult, html } from "lit";
+import { customElement } from "lit/decorators.js";
 
 import {
     AlgEnum,
@@ -10,10 +12,6 @@ import {
     CertificateKeyPair,
     CryptoApi,
 } from "@goauthentik/api";
-
-import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
-import { customElement } from "lit/decorators.js";
 
 @customElement("ak-crypto-certificate-generate-form")
 export class CertificateKeyPairForm extends Form<CertificateGenerationRequest> {
@@ -31,7 +29,7 @@ export class CertificateKeyPairForm extends Form<CertificateGenerationRequest> {
         return html`<ak-form-element-horizontal
                 label=${msg("Common Name")}
                 name="commonName"
-                required
+                ?required=${true}
             >
                 <input type="text" class="pf-c-form-control" required />
             </ak-form-element-horizontal>
@@ -41,10 +39,18 @@ export class CertificateKeyPairForm extends Form<CertificateGenerationRequest> {
                     ${msg("Optional, comma-separated SubjectAlt Names.")}
                 </p>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label=${msg("Validity days")} name="validityDays" required>
+            <ak-form-element-horizontal
+                label=${msg("Validity days")}
+                name="validityDays"
+                ?required=${true}
+            >
                 <input class="pf-c-form-control" type="number" value="365" />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label=${msg("Private key Algorithm")} required name="alg">
+            <ak-form-element-horizontal
+                label=${msg("Private key Algorithm")}
+                ?required=${true}
+                name="alg"
+            >
                 <ak-radio
                     .options=${[
                         {

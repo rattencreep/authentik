@@ -1,14 +1,12 @@
-import "#elements/forms/SearchSelect/index";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-import { groupBy } from "#common/utils";
-
-import { AKElement } from "#elements/Base";
-
-import { Provider, ProvidersAllListRequest, ProvidersApi } from "@goauthentik/api";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { groupBy } from "@goauthentik/common/utils";
+import { AKElement } from "@goauthentik/elements/Base";
+import "@goauthentik/elements/forms/SearchSelect";
 
 import { html, nothing } from "lit";
 import { customElement, property } from "lit/decorators.js";
+
+import { Provider, ProvidersAllListRequest, ProvidersApi } from "@goauthentik/api";
 
 const renderElement = (item: Provider) => item.name;
 const renderValue = (item: Provider | undefined) => item?.pk;

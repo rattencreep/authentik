@@ -1,11 +1,10 @@
-import "#elements/messages/MessageContainer";
-import "./ak-checkbox-group.js";
-
-import { CheckboxGroup as AkCheckboxGroup } from "./ak-checkbox-group.js";
-
+import "@goauthentik/elements/messages/MessageContainer";
 import { Meta } from "@storybook/web-components";
 
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
+
+import "./ak-checkbox-group";
+import { CheckboxGroup as AkCheckboxGroup } from "./ak-checkbox-group";
 
 const metadata: Meta<AkCheckboxGroup> = {
     title: "Elements / Checkbox Group",

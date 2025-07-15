@@ -1,18 +1,15 @@
-import "#elements/EmptyState";
-
-import { EVENT_REFRESH, EVENT_THEME_CHANGE } from "#common/constants";
-import { DOM_PURIFY_STRICT } from "#common/purify";
-
-import { AKElement } from "#elements/Base";
-
-import { UiThemeEnum } from "@goauthentik/api";
-
+import { EVENT_REFRESH, EVENT_THEME_CHANGE } from "@goauthentik/common/constants";
+import { DOM_PURIFY_STRICT } from "@goauthentik/common/purify";
+import { AKElement } from "@goauthentik/elements/Base";
+import "@goauthentik/elements/EmptyState";
 import mermaid, { MermaidConfig } from "mermaid";
 
-import { css, CSSResult, html, TemplateResult } from "lit";
+import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { until } from "lit/directives/until.js";
+
+import { UiThemeEnum } from "@goauthentik/api";
 
 @customElement("ak-diagram")
 export class Diagram extends AKElement {
@@ -26,14 +23,16 @@ export class Diagram extends AKElement {
 
     handlerBound = false;
 
-    static styles: CSSResult[] = [
-        css`
-            :host {
-                display: flex;
-                justify-content: center;
-            }
-        `,
-    ];
+    static get styles(): CSSResult[] {
+        return [
+            css`
+                :host {
+                    display: flex;
+                    justify-content: center;
+                }
+            `,
+        ];
+    }
 
     config: MermaidConfig;
 

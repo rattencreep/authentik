@@ -1,6 +1,6 @@
-import { DigestAlgorithmEnum, SignatureAlgorithmEnum, SpBindingEnum } from "@goauthentik/api";
-
 import { msg } from "@lit/localize";
+
+import { DigestAlgorithmEnum, SignatureAlgorithmEnum, SpBindingEnum } from "@goauthentik/api";
 
 type Option<T> = [string, T, boolean?];
 

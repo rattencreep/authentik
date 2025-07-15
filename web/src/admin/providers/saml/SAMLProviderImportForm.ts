@@ -1,17 +1,15 @@
-import "#admin/common/ak-flow-search/ak-flow-search-no-default";
-import "#elements/forms/HorizontalFormElement";
-import "#elements/forms/SearchSelect/index";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-import { SentryIgnoredError } from "#common/sentry/index";
-
-import { Form } from "#elements/forms/Form";
-
-import { FlowsInstancesListDesignationEnum, ProvidersApi, SAMLProvider } from "@goauthentik/api";
+import "@goauthentik/admin/common/ak-flow-search/ak-flow-search-no-default";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { SentryIgnoredError } from "@goauthentik/common/sentry";
+import { Form } from "@goauthentik/elements/forms/Form";
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import "@goauthentik/elements/forms/SearchSelect";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
+
+import { FlowsInstancesListDesignationEnum, ProvidersApi, SAMLProvider } from "@goauthentik/api";
 
 @customElement("ak-provider-saml-import-form")
 export class SAMLProviderImportForm extends Form<SAMLProvider> {
@@ -20,7 +18,7 @@ export class SAMLProviderImportForm extends Form<SAMLProvider> {
     }
 
     async send(data: SAMLProvider): Promise<void> {
-        const file = this.files().get("metadata");
+        const file = this.getFormFiles().metadata;
         if (!file) {
             throw new SentryIgnoredError("No form data");
         }
@@ -33,12 +31,12 @@ export class SAMLProviderImportForm extends Form<SAMLProvider> {
     }
 
     renderForm(): TemplateResult {
-        return html`<ak-form-element-horizontal label=${msg("Name")} required name="name">
+        return html`<ak-form-element-horizontal label=${msg("Name")} ?required=${true} name="name">
                 <input type="text" class="pf-c-form-control" required />
             </ak-form-element-horizontal>
             <ak-form-element-horizontal
                 label=${msg("Authorization flow")}
-                required
+                ?required=${true}
                 name="authorizationFlow"
             >
                 <ak-flow-search-no-default
@@ -51,7 +49,7 @@ export class SAMLProviderImportForm extends Form<SAMLProvider> {
             </ak-form-element-horizontal>
             <ak-form-element-horizontal
                 label=${msg("Invalidation flow")}
-                required
+                ?required=${true}
                 name="invalidationFlow"
             >
                 <ak-flow-search-no-default

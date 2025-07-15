@@ -1,4 +1,4 @@
-import { AKElement } from "#elements/Base";
+import { AKElement } from "@goauthentik/elements/Base";
 
 import { msg } from "@lit/localize";
 import { css, html } from "lit";
@@ -71,7 +71,9 @@ const styles = css`
 
 @customElement("ak-status-label")
 export class AkStatusLabel extends AKElement {
-    static styles = [PFBase, PFLabel, styles];
+    static get styles() {
+        return [PFBase, PFLabel, styles];
+    }
 
     @property({ type: Boolean })
     good = false;

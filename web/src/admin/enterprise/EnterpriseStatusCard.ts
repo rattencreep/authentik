@@ -1,7 +1,5 @@
-import { AKElement } from "#elements/Base";
-import { PFColor } from "#elements/Label";
-
-import { LicenseForecast, LicenseSummary, LicenseSummaryStatusEnum } from "@goauthentik/api";
+import { AKElement } from "@goauthentik/elements/Base";
+import { PFColor } from "@goauthentik/elements/Label";
 
 import { msg, str } from "@lit/localize";
 import { CSSResult, html, nothing } from "lit";
@@ -13,6 +11,8 @@ import PFProgress from "@patternfly/patternfly/components/Progress/progress.css"
 import PFSplit from "@patternfly/patternfly/layouts/Split/split.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
+import { LicenseForecast, LicenseSummary, LicenseSummaryStatusEnum } from "@goauthentik/api";
+
 @customElement("ak-enterprise-status-card")
 export class EnterpriseStatusCard extends AKElement {
     @state()
@@ -21,7 +21,9 @@ export class EnterpriseStatusCard extends AKElement {
     @state()
     summary?: LicenseSummary;
 
-    static styles: CSSResult[] = [PFBase, PFDescriptionList, PFCard, PFSplit, PFProgress];
+    static get styles(): CSSResult[] {
+        return [PFBase, PFDescriptionList, PFCard, PFSplit, PFProgress];
+    }
 
     renderSummaryBadge() {
         switch (this.summary?.status) {

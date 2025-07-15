@@ -1,7 +1,6 @@
 """SCIM Source"""
 
 from typing import Any
-from uuid import uuid4
 
 from django.db import models
 from django.templatetags.static import static
@@ -104,12 +103,10 @@ class SCIMSourcePropertyMapping(PropertyMapping):
 class SCIMSourceUser(SerializerModel):
     """Mapping of a user and source to a SCIM user ID"""
 
-    id = models.TextField(primary_key=True, default=uuid4)
-    external_id = models.TextField()
+    id = models.TextField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     source = models.ForeignKey(SCIMSource, on_delete=models.CASCADE)
     attributes = models.JSONField(default=dict)
-    last_update = models.DateTimeField(auto_now=True)
 
     @property
     def serializer(self) -> BaseSerializer:
@@ -118,10 +115,7 @@ class SCIMSourceUser(SerializerModel):
         return SCIMSourceUserSerializer
 
     class Meta:
-        unique_together = (("external_id", "source"),)
-        indexes = [
-            models.Index(fields=["external_id"]),
-        ]
+        unique_together = (("id", "user", "source"),)
 
     def __str__(self) -> str:
         return f"SCIM User {self.user_id} to {self.source_id}"
@@ -130,12 +124,10 @@ class SCIMSourceUser(SerializerModel):
 class SCIMSourceGroup(SerializerModel):
     """Mapping of a group and source to a SCIM user ID"""
 
-    id = models.TextField(primary_key=True, default=uuid4)
-    external_id = models.TextField()
+    id = models.TextField(primary_key=True)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     source = models.ForeignKey(SCIMSource, on_delete=models.CASCADE)
     attributes = models.JSONField(default=dict)
-    last_update = models.DateTimeField(auto_now=True)
 
     @property
     def serializer(self) -> BaseSerializer:
@@ -144,10 +136,7 @@ class SCIMSourceGroup(SerializerModel):
         return SCIMSourceGroupSerializer
 
     class Meta:
-        unique_together = (("external_id", "source"),)
-        indexes = [
-            models.Index(fields=["external_id"]),
-        ]
+        unique_together = (("id", "group", "source"),)
 
     def __str__(self) -> str:
         return f"SCIM Group {self.group_id} to {self.source_id}"

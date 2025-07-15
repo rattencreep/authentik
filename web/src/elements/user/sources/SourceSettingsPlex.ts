@@ -1,19 +1,17 @@
-import "#elements/Spinner";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-import { EVENT_REFRESH } from "#common/constants";
-import { parseAPIResponseError, pluckErrorDetail } from "#common/errors/network";
-import { PlexAPIClient, popupCenterScreen } from "#common/helpers/plex";
-import { MessageLevel } from "#common/messages";
-
-import { showMessage } from "#elements/messages/MessageContainer";
-import { BaseUserSettings } from "#elements/user/sources/BaseUserSettings";
-
-import { SourcesApi } from "@goauthentik/api";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { EVENT_REFRESH } from "@goauthentik/common/constants";
+import { parseAPIResponseError, pluckErrorDetail } from "@goauthentik/common/errors/network";
+import { PlexAPIClient, popupCenterScreen } from "@goauthentik/common/helpers/plex";
+import { MessageLevel } from "@goauthentik/common/messages";
+import "@goauthentik/elements/Spinner";
+import { showMessage } from "@goauthentik/elements/messages/MessageContainer";
+import { BaseUserSettings } from "@goauthentik/elements/user/sources/BaseUserSettings";
 
 import { msg, str } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
+
+import { SourcesApi } from "@goauthentik/api";
 
 @customElement("ak-user-settings-source-plex")
 export class SourceSettingsPlex extends BaseUserSettings {

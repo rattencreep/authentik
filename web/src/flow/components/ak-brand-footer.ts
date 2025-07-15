@@ -1,8 +1,5 @@
-import { BrandedHTMLPolicy, sanitizeHTML } from "#common/purify";
-
-import { AKElement } from "#elements/Base";
-
-import { FooterLink } from "@goauthentik/api";
+import { BrandedHTMLPolicy, sanitizeHTML } from "@goauthentik/common/purify";
+import { AKElement } from "@goauthentik/elements/Base.js";
 
 import { msg } from "@lit/localize";
 import { css, html } from "lit";
@@ -11,6 +8,8 @@ import { map } from "lit/directives/map.js";
 
 import PFList from "@patternfly/patternfly/components/List/list.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
+
+import { FooterLink } from "@goauthentik/api";
 
 const styles = css`
     .pf-c-list a {
@@ -24,7 +23,9 @@ const styles = css`
 
 @customElement("ak-brand-links")
 export class BrandLinks extends AKElement {
-    static styles = [PFBase, PFList, styles];
+    static get styles() {
+        return [PFBase, PFList, styles];
+    }
 
     @property({ type: Array, attribute: false })
     links: FooterLink[] = [];

@@ -1,4 +1,4 @@
-import { AKElement } from "#elements/Base";
+import { AKElement } from "./Base";
 
 /**
  * @class - prototype for all of our hand-made input elements
@@ -24,19 +24,5 @@ export class AkControlElement<T = string | string[]> extends AKElement {
 
     get isValid(): boolean {
         return true;
-    }
-}
-
-export function isControlElement(element: Element | HTMLElement): element is AkControlElement {
-    if (!(element instanceof HTMLElement)) return false;
-
-    if (element instanceof AkControlElement) return true;
-
-    return "dataset" in element && element.dataset.akControl === "true";
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "[data-ak-control]": AkControlElement;
     }
 }

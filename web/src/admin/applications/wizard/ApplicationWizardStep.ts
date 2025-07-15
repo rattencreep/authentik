@@ -1,27 +1,28 @@
-import {
-    ApplicationTransactionValidationError,
-    type ApplicationWizardState,
-    type ApplicationWizardStateUpdate,
-} from "./types.js";
-
-import { serializeForm } from "#elements/forms/Form";
-
+import { styles } from "@goauthentik/admin/applications/wizard/ApplicationWizardFormStepStyles.css.js";
+import { WizardStep } from "@goauthentik/components/ak-wizard/WizardStep.js";
 import {
     NavigationEventInit,
     WizardNavigationEvent,
     WizardUpdateEvent,
-} from "#components/ak-wizard/events";
-import { WizardStep } from "#components/ak-wizard/WizardStep";
-
-import { styles } from "#admin/applications/wizard/ApplicationWizardFormStepStyles.styles";
-
-import { ValidationError } from "@goauthentik/api";
+} from "@goauthentik/components/ak-wizard/events";
+import { KeyUnknown, serializeForm } from "@goauthentik/elements/forms/Form";
+import { HorizontalFormElement } from "@goauthentik/elements/forms/HorizontalFormElement";
 
 import { msg } from "@lit/localize";
 import { property, query } from "lit/decorators.js";
 
-export class ApplicationWizardStep<T = Record<string, unknown>> extends WizardStep {
-    static styles = [...WizardStep.styles, ...styles];
+import { ValidationError } from "@goauthentik/api";
+
+import {
+    ApplicationTransactionValidationError,
+    type ApplicationWizardState,
+    type ApplicationWizardStateUpdate,
+} from "./types";
+
+export class ApplicationWizardStep extends WizardStep {
+    static get styles() {
+        return [...WizardStep.styles, ...styles];
+    }
 
     @property({ type: Object, attribute: false })
     wizard!: ApplicationWizardState;
@@ -36,11 +37,14 @@ export class ApplicationWizardStep<T = Record<string, unknown>> extends WizardSt
     @query("form")
     form!: HTMLFormElement;
 
-    get formValues(): T {
-        return serializeForm<T>([
-            ...this.form.querySelectorAll("ak-form-element-horizontal"),
-            ...this.form.querySelectorAll("[data-ak-control]"),
-        ]);
+    get formValues(): KeyUnknown | undefined {
+        const elements = [
+            ...Array.from(
+                this.form.querySelectorAll<HorizontalFormElement>("ak-form-element-horizontal"),
+            ),
+            ...Array.from(this.form.querySelectorAll<HTMLElement>("[data-ak-control=true]")),
+        ];
+        return serializeForm(elements as unknown as NodeListOf<HorizontalFormElement>);
     }
 
     protected removeErrors(

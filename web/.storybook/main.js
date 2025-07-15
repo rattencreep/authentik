@@ -3,8 +3,8 @@
  * @import { StorybookConfig } from "@storybook/web-components-vite";
  * @import { InlineConfig, Plugin } from "vite";
  */
-
 import postcssLit from "rollup-plugin-postcss-lit";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 const CSSImportPattern = /import [\w$]+ from .+\.(css)/g;
 const JavaScriptFilePattern = /\.m?(js|ts|tsx)$/;
@@ -37,10 +37,6 @@ const inlineCSSPlugin = {
  */
 const config = {
     stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
-    staticDirs: [
-        { from: "../icons", to: "/static/dist/assets/icons" },
-        { from: "../authentik", to: "/static/authentik" },
-    ],
     addons: [
         "@storybook/addon-controls",
         "@storybook/addon-links",
@@ -65,7 +61,7 @@ const config = {
          */
         const overrides = {
             define: createBundleDefinitions(),
-            plugins: [inlineCSSPlugin, postcssLit()],
+            plugins: [inlineCSSPlugin, postcssLit(), tsconfigPaths()],
         };
 
         return mergeConfig(config, overrides);

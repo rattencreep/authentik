@@ -1,12 +1,11 @@
-import { renderForm } from "./SCIMProviderFormForm.js";
+import { BaseProviderForm } from "@goauthentik/admin/providers/BaseProviderForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
 
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { BaseProviderForm } from "#admin/providers/BaseProviderForm";
+import { customElement } from "lit/decorators.js";
 
 import { ProvidersApi, SCIMProvider } from "@goauthentik/api";
 
-import { customElement } from "lit/decorators.js";
+import { renderForm } from "./SCIMProviderFormForm.js";
 
 @customElement("ak-provider-scim-form")
 export class SCIMProviderFormPage extends BaseProviderForm<SCIMProvider> {

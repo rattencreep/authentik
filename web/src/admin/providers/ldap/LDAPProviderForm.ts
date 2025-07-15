@@ -1,17 +1,14 @@
-import "#admin/common/ak-crypto-certificate-search";
-import "#admin/common/ak-flow-search/ak-branded-flow-search";
-
-import { renderForm } from "./LDAPProviderFormForm.js";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-
 import { WithBrandConfig } from "#elements/mixins/branding";
+import "@goauthentik/admin/common/ak-crypto-certificate-search";
+import "@goauthentik/admin/common/ak-flow-search/ak-branded-flow-search";
+import { BaseProviderForm } from "@goauthentik/admin/providers/BaseProviderForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
 
-import { BaseProviderForm } from "#admin/providers/BaseProviderForm";
+import { customElement } from "lit/decorators.js";
 
 import { LDAPProvider, ProvidersApi } from "@goauthentik/api";
 
-import { customElement } from "lit/decorators.js";
+import { renderForm } from "./LDAPProviderFormForm.js";
 
 @customElement("ak-provider-ldap-form")
 export class LDAPProviderFormPage extends WithBrandConfig(BaseProviderForm<LDAPProvider>) {

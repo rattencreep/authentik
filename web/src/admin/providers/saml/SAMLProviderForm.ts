@@ -1,13 +1,12 @@
-import { renderForm } from "./SAMLProviderFormForm.js";
+import { type AkCryptoCertificateSearch } from "@goauthentik/admin/common/ak-crypto-certificate-search";
+import { BaseProviderForm } from "@goauthentik/admin/providers/BaseProviderForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
 
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { type AkCryptoCertificateSearch } from "#admin/common/ak-crypto-certificate-search";
-import { BaseProviderForm } from "#admin/providers/BaseProviderForm";
+import { customElement, state } from "lit/decorators.js";
 
 import { ProvidersApi, SAMLProvider } from "@goauthentik/api";
 
-import { customElement, state } from "lit/decorators.js";
+import { renderForm } from "./SAMLProviderFormForm.js";
 
 @customElement("ak-provider-saml-form")
 export class SAMLProviderFormPage extends BaseProviderForm<SAMLProvider> {

@@ -1,15 +1,13 @@
-import "#elements/forms/HorizontalFormElement";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { BaseStageForm } from "#admin/stages/BaseStageForm";
-
-import { DenyStage, StagesApi } from "@goauthentik/api";
+import { BaseStageForm } from "@goauthentik/admin/stages/BaseStageForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/elements/forms/HorizontalFormElement";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+
+import { DenyStage, StagesApi } from "@goauthentik/api";
 
 @customElement("ak-stage-deny-form")
 export class DenyStageForm extends BaseStageForm<DenyStage> {
@@ -38,7 +36,7 @@ export class DenyStageForm extends BaseStageForm<DenyStage> {
                     "Statically deny the flow. To use this stage effectively, disable *Evaluate when flow is planned* on the respective binding.",
                 )}
             </span>
-            <ak-form-element-horizontal label=${msg("Name")} required name="name">
+            <ak-form-element-horizontal label=${msg("Name")} ?required=${true} name="name">
                 <input
                     type="text"
                     value="${ifDefined(this.instance?.name || "")}"
@@ -46,7 +44,7 @@ export class DenyStageForm extends BaseStageForm<DenyStage> {
                     required
                 />
             </ak-form-element-horizontal>
-            <ak-form-group expanded>
+            <ak-form-group .expanded=${true}>
                 <span slot="header"> ${msg("Stage-specific settings")} </span>
                 <div slot="body" class="pf-c-form">
                     <ak-form-element-horizontal label=${msg("Deny message")} name="denyMessage">

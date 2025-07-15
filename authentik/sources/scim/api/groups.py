@@ -18,7 +18,6 @@ class SCIMSourceGroupSerializer(SourceSerializer):
         model = SCIMSourceGroup
         fields = [
             "id",
-            "external_id",
             "group",
             "group_obj",
             "source",
@@ -32,5 +31,5 @@ class SCIMSourceGroupViewSet(UsedByMixin, ModelViewSet):
     queryset = SCIMSourceGroup.objects.all().select_related("group")
     serializer_class = SCIMSourceGroupSerializer
     filterset_fields = ["source__slug", "group__name", "group__group_uuid"]
-    search_fields = ["source__slug", "group__name", "attributes", "external_id"]
+    search_fields = ["source__slug", "group__name", "attributes"]
     ordering = ["group__name"]

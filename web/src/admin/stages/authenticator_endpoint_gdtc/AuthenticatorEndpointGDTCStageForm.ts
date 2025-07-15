@@ -1,20 +1,17 @@
-import "#elements/CodeMirror";
-import "#elements/forms/FormGroup";
-import "#elements/forms/HorizontalFormElement";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { CodeMirrorMode } from "#elements/CodeMirror";
-
-import { BaseStageForm } from "#admin/stages/BaseStageForm";
-
-import { AuthenticatorEndpointGDTCStage, StagesApi } from "@goauthentik/api";
+import { BaseStageForm } from "@goauthentik/admin/stages/BaseStageForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/elements/CodeMirror";
+import { CodeMirrorMode } from "@goauthentik/elements/CodeMirror";
+import "@goauthentik/elements/forms/FormGroup";
+import "@goauthentik/elements/forms/HorizontalFormElement";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
 import PFBanner from "@patternfly/patternfly/components/Banner/banner.css";
+
+import { AuthenticatorEndpointGDTCStage, StagesApi } from "@goauthentik/api";
 
 @customElement("ak-stage-authenticator-endpoint-gdtc-form")
 export class AuthenticatorEndpointGDTCStageForm extends BaseStageForm<AuthenticatorEndpointGDTCStage> {
@@ -36,7 +33,9 @@ export class AuthenticatorEndpointGDTCStageForm extends BaseStageForm<Authentica
         });
     }
 
-    static styles = [...super.styles, PFBanner];
+    static get styles() {
+        return super.styles.concat(PFBanner);
+    }
 
     renderForm(): TemplateResult {
         return html`<div class="pf-c-banner pf-m-info">

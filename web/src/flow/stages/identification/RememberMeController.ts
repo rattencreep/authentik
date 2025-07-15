@@ -1,21 +1,22 @@
-import type { IdentificationStage } from "./IdentificationStage.js";
-
-import { getCookie } from "#common/utils";
+import { getCookie } from "@goauthentik/common/utils.js";
 
 import { msg } from "@lit/localize";
-import { css, html, nothing, ReactiveController, ReactiveControllerHost } from "lit";
+import { css, html, nothing } from "lit";
+import { ReactiveController, ReactiveControllerHost } from "lit";
+
+import type { IdentificationStage } from "./IdentificationStage.js";
 
 type RememberMeHost = ReactiveControllerHost & IdentificationStage;
 
 export class AkRememberMeController implements ReactiveController {
-    static styles = [
-        css`
+    static get styles() {
+        return css`
             .remember-me-switch {
                 display: inline-block;
                 padding-top: 0.25rem;
             }
-        `,
-    ];
+        `;
+    }
 
     username?: string;
 

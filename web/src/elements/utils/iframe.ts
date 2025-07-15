@@ -2,31 +2,54 @@
  * @file IFrame Utilities
  */
 
-import { renderStaticHTMLUnsafe } from "#common/purify";
+interface IFrameLoadResult {
+    contentWindow: Window;
+    contentDocument: Document;
+}
 
-import { MaybeCompiledTemplateResult } from "lit";
+export function pluckIFrameContent(iframe: HTMLIFrameElement) {
+    const contentWindow = iframe.contentWindow;
+    const contentDocument = iframe.contentDocument;
 
-export interface CreateHTMLObjectInit {
-    body: string | MaybeCompiledTemplateResult;
-    head?: string | MaybeCompiledTemplateResult;
+    if (!contentWindow) {
+        throw new Error("Iframe contentWindow is not accessible");
+    }
+
+    if (!contentDocument) {
+        throw new Error("Iframe contentDocument is not accessible");
+    }
+
+    return {
+        contentWindow,
+        contentDocument,
+    };
+}
+
+export function resolveIFrameContent(iframe: HTMLIFrameElement): Promise<IFrameLoadResult> {
+    if (iframe.contentDocument?.readyState === "complete") {
+        return Promise.resolve(pluckIFrameContent(iframe));
+    }
+
+    return new Promise((resolve) => {
+        iframe.addEventListener("load", () => resolve(pluckIFrameContent(iframe)), { once: true });
+    });
 }
 
 /**
- * Render untrusted HTML to a string without escaping it.
+ * Creates a minimal HTML wrapper for an iframe.
  *
- * @returns {string} The rendered HTML string.
+ * @deprecated Use the `contentDocument.body` directly instead.
  */
-export function createDocumentTemplate(init: CreateHTMLObjectInit): string {
-    const body = renderStaticHTMLUnsafe(init.body);
-    const head = init.head ? renderStaticHTMLUnsafe(init.head) : "";
+export function createIFrameHTMLWrapper(bodyContent: string): string {
+    const html = String.raw;
 
-    return `<!DOCTYPE html>
+    return html`<!doctype html>
         <html>
             <head>
-                ${head}
+                <meta charset="utf-8" />
             </head>
-            <body>
-                ${body}
+            <body style="display:flex;flex-direction:row;justify-content:center;">
+                ${bodyContent}
             </body>
         </html>`;
 }

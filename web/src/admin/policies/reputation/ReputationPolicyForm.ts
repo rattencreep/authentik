@@ -1,16 +1,14 @@
-import "#elements/forms/FormGroup";
-import "#elements/forms/HorizontalFormElement";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { BasePolicyForm } from "#admin/policies/BasePolicyForm";
-
-import { PoliciesApi, ReputationPolicy } from "@goauthentik/api";
+import { BasePolicyForm } from "@goauthentik/admin/policies/BasePolicyForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/elements/forms/FormGroup";
+import "@goauthentik/elements/forms/HorizontalFormElement";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+
+import { PoliciesApi, ReputationPolicy } from "@goauthentik/api";
 
 @customElement("ak-policy-reputation-form")
 export class ReputationPolicyForm extends BasePolicyForm<ReputationPolicy> {
@@ -48,7 +46,7 @@ username they are attempting to login as, by one.`,
 doesn't pass when either or both of the selected options are equal or above the threshold.`,
                 )}
             </span>
-            <ak-form-element-horizontal label=${msg("Name")} required name="name">
+            <ak-form-element-horizontal label=${msg("Name")} ?required=${true} name="name">
                 <input
                     type="text"
                     value="${ifDefined(this.instance?.name || "")}"
@@ -76,7 +74,7 @@ doesn't pass when either or both of the selected options are equal or above the 
                     )}
                 </p>
             </ak-form-element-horizontal>
-            <ak-form-group expanded>
+            <ak-form-group .expanded=${true}>
                 <span slot="header"> ${msg("Policy-specific settings")} </span>
                 <div slot="body" class="pf-c-form">
                     <ak-form-element-horizontal name="checkIp">
@@ -109,7 +107,11 @@ doesn't pass when either or both of the selected options are equal or above the 
                             <span class="pf-c-switch__label">${msg("Check Username")}</span>
                         </label>
                     </ak-form-element-horizontal>
-                    <ak-form-element-horizontal label=${msg("Threshold")} required name="threshold">
+                    <ak-form-element-horizontal
+                        label=${msg("Threshold")}
+                        ?required=${true}
+                        name="threshold"
+                    >
                         <input
                             type="number"
                             value="${ifDefined(this.instance?.threshold || -5)}"

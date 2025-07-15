@@ -1,20 +1,15 @@
 import "#admin/admin-settings/AdminSettingsForm";
+import { AdminSettingsForm } from "#admin/admin-settings/AdminSettingsForm";
+import { DEFAULT_CONFIG } from "#common/api/config";
 import "#components/ak-page-header";
 import "#components/events/ObjectChangelog";
+import { AKElement } from "#elements/Base";
 import "#elements/CodeMirror";
 import "#elements/EmptyState";
 import "#elements/Tabs";
 import "#elements/buttons/ModalButton";
 import "#elements/buttons/SpinnerButton/ak-spinner-button";
 import "#elements/forms/ModalForm";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { AKElement } from "#elements/Base";
-
-import { AdminSettingsForm } from "#admin/admin-settings/AdminSettingsForm";
-
-import { AdminApi, Settings } from "@goauthentik/api";
 
 import { msg } from "@lit/localize";
 import { html, nothing } from "lit";
@@ -31,48 +26,60 @@ import PFPage from "@patternfly/patternfly/components/Page/page.css";
 import PFGrid from "@patternfly/patternfly/layouts/Grid/grid.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
+import { AdminApi, Settings } from "@goauthentik/api";
+
 @customElement("ak-admin-settings")
 export class AdminSettingsPage extends AKElement {
-    static styles = [
-        PFBase,
-        PFButton,
-        PFPage,
-        PFGrid,
-        PFContent,
-        PFCard,
-        PFDescriptionList,
-        PFForm,
-        PFFormControl,
-        PFBanner,
-    ];
+    static get styles() {
+        return [
+            PFBase,
+            PFButton,
+            PFPage,
+            PFGrid,
+            PFContent,
+            PFCard,
+            PFDescriptionList,
+            PFForm,
+            PFFormControl,
+            PFBanner,
+        ];
+    }
 
     @query("ak-admin-settings-form#form")
-    protected form?: AdminSettingsForm;
+    form?: AdminSettingsForm;
 
     @state()
-    protected settings?: Settings;
+    settings?: Settings;
 
     constructor() {
         super();
-
-        this.#refresh();
-
-        this.addEventListener("ak-admin-setting-changed", this.#refresh);
-    }
-
-    #refresh = () => {
-        return new AdminApi(DEFAULT_CONFIG).adminSettingsRetrieve().then((settings) => {
+        AdminSettingsPage.fetchSettings().then((settings) => {
             this.settings = settings;
         });
-    };
+        this.save = this.save.bind(this);
+        this.reset = this.reset.bind(this);
+        this.addEventListener("ak-admin-setting-changed", this.handleUpdate.bind(this));
+    }
 
-    #save = () => {
-        return this.form?.submit(new SubmitEvent("submit")).then(this.#refresh);
-    };
+    static async fetchSettings() {
+        return await new AdminApi(DEFAULT_CONFIG).adminSettingsRetrieve();
+    }
 
-    #reset = () => {
-        return this.form?.reset();
-    };
+    async handleUpdate() {
+        this.settings = await AdminSettingsPage.fetchSettings();
+    }
+
+    async save() {
+        if (!this.form) {
+            return;
+        }
+        await this.form.submit(new Event("submit"));
+        this.settings = await AdminSettingsPage.fetchSettings();
+    }
+
+    async reset() {
+        this.form?.resetForm();
+    }
 
     render() {
         if (!this.settings) return nothing;
@@ -86,10 +93,10 @@ export class AdminSettingsPage extends AKElement {
                         </ak-admin-settings-form>
                     </div>
                     <div class="pf-c-card__footer">
-                        <ak-spinner-button .callAction=${this.#save} class="pf-m-primary"
+                        <ak-spinner-button .callAction=${this.save} class="pf-m-primary"
                             >${msg("Save")}</ak-spinner-button
                         >
-                        <ak-spinner-button .callAction=${this.#reset} class="pf-m-secondary"
+                        <ak-spinner-button .callAction=${this.reset} class="pf-m-secondary"
                             >${msg("Cancel")}</ak-spinner-button
                         >
                     </div>

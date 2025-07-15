@@ -1,6 +1,5 @@
-import { AKElement } from "#elements/Base";
-import { type SlottedTemplateResult, type Spread } from "#elements/types";
-
+import { AKElement } from "@goauthentik/elements/Base";
+import { type SlottedTemplateResult, type Spread } from "@goauthentik/elements/types";
 import { spread } from "@open-wc/lit-helpers";
 
 import { msg } from "@lit/localize";
@@ -27,15 +26,17 @@ export class Expand extends AKElement implements IExpand {
     @property({ type: String, attribute: "text-closed" })
     textClosed = msg("Show more");
 
-    static styles = [
-        PFBase,
-        PFExpandableSection,
-        css`
-            .pf-c-expandable-section.pf-m-display-lg {
-                background-color: var(--pf-global--BackgroundColor--100);
-            }
-        `,
-    ];
+    static get styles() {
+        return [
+            PFBase,
+            PFExpandableSection,
+            css`
+                .pf-c-expandable-section.pf-m-display-lg {
+                    background-color: var(--pf-global--BackgroundColor--100);
+                }
+            `,
+        ];
+    }
 
     render() {
         return html`<div

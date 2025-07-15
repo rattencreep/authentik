@@ -1,16 +1,14 @@
-import "#elements/CodeMirror";
-import "#elements/forms/HorizontalFormElement";
-
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { BasePropertyMappingForm } from "#admin/property-mappings/BasePropertyMappingForm";
-
-import { PropertymappingsApi, ScopeMapping } from "@goauthentik/api";
+import { BasePropertyMappingForm } from "@goauthentik/admin/property-mappings/BasePropertyMappingForm";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/elements/CodeMirror";
+import "@goauthentik/elements/forms/HorizontalFormElement";
 
 import { msg } from "@lit/localize";
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+
+import { PropertymappingsApi, ScopeMapping } from "@goauthentik/api";
 
 @customElement("ak-property-mapping-provider-scope-form")
 export class PropertyMappingProviderScopeForm extends BasePropertyMappingForm<ScopeMapping> {

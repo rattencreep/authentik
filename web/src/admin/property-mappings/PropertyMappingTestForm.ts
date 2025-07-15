@@ -1,11 +1,15 @@
-import "#elements/CodeMirror";
-import "#elements/forms/HorizontalFormElement";
-import "#elements/forms/SearchSelect/index";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import "@goauthentik/elements/CodeMirror";
+import { CodeMirrorMode } from "@goauthentik/elements/CodeMirror";
+import { Form } from "@goauthentik/elements/forms/Form";
+import "@goauthentik/elements/forms/HorizontalFormElement";
+import "@goauthentik/elements/forms/SearchSelect";
+import YAML from "yaml";
 
-import { DEFAULT_CONFIG } from "#common/api/config";
-
-import { CodeMirrorMode } from "#elements/CodeMirror";
-import { Form } from "#elements/forms/Form";
+import { msg } from "@lit/localize";
+import { TemplateResult, html, nothing } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 import {
     CoreApi,
@@ -13,19 +17,12 @@ import {
     CoreUsersListRequest,
     Group,
     PropertyMapping,
-    PropertymappingsApi,
     PropertyMappingTestRequest,
     PropertyMappingTestResult,
+    PropertymappingsApi,
     RbacPermissionsAssignedByUsersListModelEnum,
     User,
 } from "@goauthentik/api";
-
-import YAML from "yaml";
-
-import { msg } from "@lit/localize";
-import { html, nothing, TemplateResult } from "lit";
-import { customElement, property } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
 
 @customElement("ak-property-mapping-test-form")
 export class PolicyTestForm extends Form<PropertyMappingTestRequest> {
@@ -57,7 +54,7 @@ export class PolicyTestForm extends Form<PropertyMappingTestRequest> {
             ${this.result?.successful
                 ? html`<ak-codemirror
                       mode=${CodeMirrorMode.JavaScript}
-                      readOnly
+                      ?readOnly=${true}
                       value="${ifDefined(this.result?.result)}"
                   >
                   </ak-codemirror>`

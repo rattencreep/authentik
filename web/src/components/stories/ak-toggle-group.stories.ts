@@ -1,11 +1,10 @@
-import "#elements/messages/MessageContainer";
-import "../ak-toggle-group.js";
-
-import AkToggleGroup from "../ak-toggle-group.js";
-
+import "@goauthentik/elements/messages/MessageContainer";
 import { Meta } from "@storybook/web-components";
 
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
+
+import "../ak-toggle-group";
+import AkToggleGroup from "../ak-toggle-group";
 
 const metadata: Meta<AkToggleGroup> = {
     title: "Components / Toggle Group",

@@ -1,11 +1,10 @@
-import "#elements/messages/MessageContainer";
-import "../Radio.js";
-
-import Radio from "../Radio.js";
-
+import "@goauthentik/elements/messages/MessageContainer";
 import { Meta } from "@storybook/web-components";
 
-import { html, TemplateResult } from "lit";
+import { TemplateResult, html } from "lit";
+
+import "../Radio";
+import Radio from "../Radio";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const metadata: Meta<Radio<any>> = {

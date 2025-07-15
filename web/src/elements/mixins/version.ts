@@ -1,8 +1,8 @@
 import { createMixin } from "#elements/types";
 
-import type { Version } from "@goauthentik/api";
+import { Context, consume, createContext } from "@lit/context";
 
-import { consume, Context, createContext } from "@lit/context";
+import type { Version } from "@goauthentik/api";
 
 /**
  * The Lit context for application branding.
